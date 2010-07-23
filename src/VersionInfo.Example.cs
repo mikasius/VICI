@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VersionInfo.cs" company="Sleepless Monkey Development, Inc.">
+// <copyright file="VersionInfo.Example.cs" company="Sleepless Monkey Development, Inc.">
 //   Copyright © 2010
 // </copyright>
 // <summary>
@@ -30,9 +30,6 @@ using System.Reflection;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.1.0")]
-[assembly: AssemblyFileVersion("0.0.1.0")]
-[assembly: AssemblyInformationalVersionAttribute("0.0.1.0")]
+[assembly: AssemblyVersion("999.999.999.999")]
+[assembly: AssemblyFileVersion("999.999.999.999")]
+[assembly: AssemblyInformationalVersion("999.999.999.999")]

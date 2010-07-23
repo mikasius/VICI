@@ -30,8 +30,6 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <InstallerProject Include="$(BasePath)**\*.Installer.wixproj" />
-        
         <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs" />
     </ItemGroup>
     
@@ -49,39 +47,97 @@
     </Target>
     
     <Target Name="UpdateVersion">
-        <Exec Command="$(GitExe) describe --long > $(BuildOutputPath)_version" />
-        <ReadLinesFromFile File="$(BuildOutputPath)_version">
+        <Exec Command="$(GitExe) describe --long > $(BuildOutputPath)_version" Condition=" Exists('$(BasePath).git\') "/>
+        <ReadLinesFromFile File="$(BuildOutputPath)_version" Condition=" Exists('$(BuildOutputPath)_version') ">
             <Output TaskParameter="Lines" ItemName="VersionLines" />
         </ReadLinesFromFile>
-        <Delete Files="$(BuildOutputPath)_version" />
-        <RegexReplace Input="@(VersionLines)" Expression="-.{8}$" Replacement="">
+        <Delete Files="$(BuildOutputPath)_version" Condition=" Exists('$(BuildOutputPath)_version') " />
+        <RegexReplace Input="@(VersionLines)" Expression="-.{8}$" Replacement="" Condition=" '@(VersionLines)' != '' ">
             <Output TaskParameter="Output" ItemName="VersionTag" />
         </RegexReplace>
-        <RegexReplace Input="@(VersionTag)" Expression="-" Replacement=".">
+        <RegexReplace Input="@(VersionTag)" Expression="v" Replacement="" Condition=" '@(VersionTag)' != ''">
             <Output TaskParameter="Output" ItemName="VersionTag1" />
         </RegexReplace>
-        <RegexReplace Input="@(VersionTag1)" Expression="v" Replacement="">
+        <RegexReplace Input="@(VersionTag1)" Expression="-" Replacement="." Condition=" '@(VersionTag1)' != '' ">
             <Output TaskParameter="Output" ItemName="VersionTag2" />
         </RegexReplace>
-        <CreateProperty Value="@(VersionTag2)">
+        <RegexReplace Input="@(VersionTag1)" Expression="-\d+$" Replacement=".0" Condition=" '@(VersionTag1)' != '' ">
+            <Output TaskParameter="Output" ItemName="AssemblyVersion" />
+        </RegexReplace>
+        <CreateProperty Value="@(VersionTag2)" Condition=" '@(VersionTag2)' != '' ">
             <Output TaskParameter="Value" PropertyName="Version" />
+        </CreateProperty>
+        <CreateProperty Value="@(AssemblyVersion)" Condition=" '@(AssemblyVersion)' != '' ">
+            <Output TaskParameter="Value" PropertyName="AssemblyVersion" />
+        </CreateProperty>
+        <Message Text="Unable to find Git tag information.  Using default value" Importance="high" Condition=" '@(VersionTag2)' == '' OR '@(AssemblyVersion)' == '' " />
+        <CreateProperty Value="999.999.999.999" Condition=" '@(VersionTag2)' == '' ">
+            <Output TaskParameter="Value" PropertyName="Version" />
+        </CreateProperty>
+        <CreateProperty Value="999.999.999.999" Condition=" '@(AssemblyVersion)' == '' ">
+            <Output TaskParameter="Value" PropertyName="AssemblyVersion" />
         </CreateProperty>
     </Target>
     
-    <Target Name="UpdateVersionFiles" DependsOnTargets="UpdateVersion">
+    <Target Name="UpdateVersionFile" DependsOnTargets="UpdateVersion">
+        <Copy SourceFiles="$(SourceCodePath)VersionInfo.Example.cs" DestinationFiles="$(SourceCodePath)VersionInfo.cs" Condition="!Exists('$(SourceCodePath)VersionInfo.cs')" />
         <!-- Update VersionInfo.cs for assembly versions -->
-        <!-- Update Installer BuildProperties.wxi for installer version -->
+        <ReadLinesFromFile File="$(SourceCodePath)VersionInfo.cs">
+            <Output TaskParameter="Lines" ItemName="_versionInfoLines" />
+        </ReadLinesFromFile>
+        <RegexReplace Input="@(_versionInfoLines)" Expression="\d+\.\d+\.\d+\.\d+" Replacement="$(Version)">
+            <Output TaskParameter="Output" ItemName="_newVersionInfoLines" />
+        </RegexReplace>
+        <RegexReplace Input="@(_newVersionInfoLines)" Expression="AssemblyVersion\(&quot;\d+\.\d+\.\d+\.\d+" Replacement="AssemblyVersion(&quot;$(AssemblyVersion)">
+            <Output TaskParameter="Output" ItemName="_newVersionInfoLines1" />
+        </RegexReplace>
+        <WriteLinesToFile File="$(SourceCodePath)VersionInfo.cs" Lines="@(_newVersionInfoLines1)" Overwrite="true" />
     </Target>
     
     <Target Name="Build" DependsOnTargets="Init;UpdateVersion">
+        <ItemGroup>
+            <ClientProject Include="$(SourceCodePath)**\Vici.Client.csproj" />
+        </ItemGroup>
+        <MSBuild Projects="@(ClientProject)" Properties="Configuration=$(Configuration)" />
     </Target>
     
     <Target Name="Build_Tests" DependsOnTargets="Build">
     </Target>
     
-    <Target Name="Build_Installer" DependsOnTargets="Build">
-        <Message Text="Building Installer Package: @(InstallerProject)" />
-        <!-- Rename installer to include the version.  Like "VICI_0.0.1.0_Install.msi" -->
+    <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
+        <!-- Copy the installer project to the build folder so updates don't affect source control -->
+        <ItemGroup>
+            <InstallerFiles Include="$(SourceCodePath)Vici.Installer\**\*.*" Exclude="$(SourceCodePath)Vici.Installer\bin\**\*.*;$(SourceCodePath)Vici.Installer\obj\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(InstallerFiles)" DestinationFolder="$(BuildOutputPath)Installer\%(RecursiveDir)" />
+        
+        
+        <ItemGroup>
+            <InstallerProject Include="$(BuildOutputPath)**\*.wixproj" />
+            <InstallerProperties Include="$(BuildOutputPath)**\BuildProperties.wxi" />
+        </ItemGroup>
+        
+        <!-- Update the version information -->
+        <ReadLinesFromFile File="@(InstallerProperties)">
+            <Output TaskParameter="Lines" ItemName="_installerPropertiesLines" />
+        </ReadLinesFromFile>
+        <RegexReplace Input="@(_installerPropertiesLines)" Expression="&quot;\d+\.\d+\.\d+\.\d+&quot;" Replacement="&quot;$(Version)&quot;">
+            <Output TaskParameter="Output" ItemName="_newInstallerProperties" />
+        </RegexReplace>
+        <WriteLinesToFile File="@(InstallerProperties)" Lines="@(_newInstallerProperties)" Overwrite="true" />
+        
+        <!-- Build the installer & move it to the root of the build folder -->
+        <MSBuild Projects="@(InstallerProject)" Properties="Configuration=$(Configuration);DefineSolutionProperties=false" />
+        <Delete Files="$(BuildOutputPath)$(Configuration)\Vici.Installer.wixpdb" />
+        <Copy SourceFiles="$(BuildOutputPath)$(Configuration)\Vici.Installer.msi" DestinationFiles="$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_Install.msi" />
+        <Delete Files="$(BuildOutputPath)$(Configuration)\Vici.Installer.msi" />
+        
+        <!-- Clear out the copied Installer project files -->
+        <ItemGroup>
+            <_CopiedInstallerFiles Include="$(BuildOutputPath)Installer\**\*;$(BuildOutputPath)Installer\*" />
+        </ItemGroup>
+        <Delete Files="@(_CopiedInstallerFiles)" />
+        <RemoveDir Directories="$(BuildOutputPath)Installer\" ContinueOnError="true" />
     </Target>
     
     <Target Name="Build_All" DependsOnTargets="Build;Build_Tests;Build_Installer">
@@ -108,4 +164,6 @@
             TreatErrorsAsWarnings="true" />
         <Message Text="After StyleCop" />
     </Target>
+    
+    <Target Name="Everything" DependsOnTargets="ArchiveSource;AnalyzeAssemblies;Build_All;Build_Installer;Build_Tests;Build;" />
 </Project>

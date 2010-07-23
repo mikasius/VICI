@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		src\CompilationInfo.cs = src\CompilationInfo.cs
 		src\ProjectInformation.cs = src\ProjectInformation.cs
 		src\Settings.StyleCop = src\Settings.StyleCop
-		src\VersionInfo.cs = src\VersionInfo.cs
+		src\VersionInfo.Example.cs = src\VersionInfo.Example.cs
 		src\vici-public.snk = src\vici-public.snk
 		src\vici.snk = src\vici.snk
 	EndProjectSection

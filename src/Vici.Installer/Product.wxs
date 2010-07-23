@@ -40,18 +40,31 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLLOCATION" Name="Vici">
+                    <Component Id="C_Client" Guid="486D84D3-5E0B-4616-930E-77F8913AC9F3">
+                        <File Id="F_Client_Exe" Name="Vici.Client.exe" Source="$(sys.SOURCEFILEDIR)..\..\_build\$(var.Configuration)\" KeyPath="yes" DiskId="1" />
+                        <File Id="F_Client_Exe_Config" Name="Vici.Client.exe.config" Source="$(sys.SOURCEFILEDIR)..\..\_build\$(var.Configuration)\" KeyPath="no" DiskId="1" />
+                    </Component>
+                    <Component Id="C_Vici_License" Guid="C144CEFA-0F9D-4EC2-9FDE-ACEA7EEE29F9">
+                        <File Id="F_Vici_License" Name="License.rtf" Source="assets\license.rtf" KeyPath="yes" DiskId="1" />
+                    </Component>
                     <Directory Id="D_ViciExtensibility" Name="Plugin">
+                        <!--
                         <Component Id="C_Extensibility_Weather" Guid="DACC04E8-EE3F-4DA8-8EE4-C362ED195B7E">
                             <File Id="F_Extensibility_Weather" Name="Vici.Weather.dll" Source="$(sys.SOURCEFILEDIR)..\..\_Build\$(var.Configuration)\Plugin\" KeyPath="yes" DiskId="1" />
                         </Component>
+                        -->
                     </Directory>
 				</Directory>
 			</Directory>
 		</Directory>
 
-		<Feature Id="Feature_Vici" Title="VICI $(var.productVersion)" Level="1" Display="expand">
-            <Feature Id="FEAT_Extensibility" Title="Extensibility" Level="1" Display="expand">
-                <ComponentRef Id="C_Extensibility_Weather"/>
+		<Feature Id="Feature_Vici" Title="VICI $(var.productVersion)" Description="Everything related to VICI" Level="1" Display="expand" AllowAdvertise="no" Absent="disallow" ConfigurableDirectory='INSTALLLOCATION'>
+            <ComponentRef Id="C_Vici_License"/>
+            <Feature Id="FEAT_Extensibility" Title="Extensibility" Description="Ready-built plugins for VICI" Level="1" AllowAdvertise="no" Display="expand">
+                <!--<ComponentRef Id="C_Extensibility_Weather"/>-->
+            </Feature>
+            <Feature Id="FEAT_Client" Title="Client" Level="1" Description="The client allows for configuration of VICI" AllowAdvertise="no" Display="expand">
+                <ComponentRef Id="C_Client"/>
             </Feature>
 		</Feature>
         
