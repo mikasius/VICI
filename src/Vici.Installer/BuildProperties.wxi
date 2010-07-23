@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <!-- Set a default version number - this will be overridden by the build process -->
+    <?define productVersion="0.0.1.0" ?>
+    <?define productName="VICI"?>
+
+    <?define companyName="Sleepless Monkey Development, Inc."?>
+
+    <?define totalFileSize="10"?>
+</Include>

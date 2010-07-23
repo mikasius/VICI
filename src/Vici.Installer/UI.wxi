@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <WixVariable Id="WixUILicenseRtf" Value="assets\license.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="assets\banner.bmp"/>
+    <WixVariable Id="WixUIDialogBmp" Value="assets\dialog.bmp"/>
+    <WixVariable Id="WixUIExclamationIco" Value="assets\exclamation.ico" />
+    <WixVariable Id="WixUIInfoIco" Value="assets\information.ico" />
+    <WixVariable Id="WixUINewIco" Value="assets\new.ico" />
+    <WixVariable Id="WixUIUpIco" Value="assets\up.ico" /> 
+
+    <UIRef Id="WixUI_Mondo" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Icon Id="ICO_File" SourceFile="assets\Vici.ico" />
+</Include>

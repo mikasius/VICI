@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?include BuildProperties.wxi?>
+    
+	<Product Id="508df787-9f3a-4726-b2a6-9bce776cd994" Name="$(var.productName) $(var.productVersion)" Language="1033" Version="$(var.productVersion)" Manufacturer="$(var.companyName)" UpgradeCode="33b19c98-453f-4667-88c3-f339d8120e65">
+		<Package InstallerVersion="200" Compressed="yes" Description="VICI $(var.productVersion)" />
+        
+        <Property Id="NEWERPRODUCTFOUND" Secure="yes" />
+        <Property Id="PREVIOUSVERSIONSINSTALLED" Secure="yes" />
+        <Upgrade Id="A68B772B-D4F4-4744-B508-E22D95D3B186">
+            <UpgradeVersion IncludeMinimum="yes"
+                            Minimum="$(var.productVersion)"
+                            OnlyDetect="yes"
+                            Property="NEWERPRODUCTFOUND" />
+
+            <UpgradeVersion IncludeMinimum="yes"
+                            IncludeMaximum="no"
+                            Minimum="0.0.0.0"
+                            Maximum="$(var.productVersion)"
+                            Property="PREVIOUSVERSIONSINSTALLED" />
+        </Upgrade>
+
+        <Media Id="1" Cabinet="Vici.cab" EmbedCab="yes" />
+        <Property Id='DiskPrompt' Value="$(var.companyName)'s $(var.productName) $(var.productVersion) Installation [1]" />
+
+        <!-- Windows Add/Remove Programs properties -->
+        <Property Id="ARPCOMMENTS">Allow for vocal control of common computer tasks.</Property>
+        <Property Id="ARPCONTACT">Sleepless Monkey Development, Inc.</Property>
+        <Property Id="ARPHELPLINK">http://github.com/kopelli/VICI/issues</Property>
+        <Property Id="ARPURLINFOABOUT">http://github.com/kopelli/VICI</Property>
+        <Property Id="ARPURLUPDATEINFO">http://github.com/kopelli/VICI/Versions</Property>
+        <Property Id="ARPHELPTELEPHONE">1-920-341-4243</Property>
+        <Property Id="ARPREADME">http://github.com/kopelli/VICI/Readme.html</Property>
+        <Property Id="ARPSIZE">$(var.totalFileSize)</Property>    <!-- Update this value with the install size in Kb -->
+        <Property Id="ARPPRODUCTICON">ICO_File</Property>   <!-- This refers to the Id attribute of the <Icon> element -->
+        <!--<Property Id="ARPNOMODIFY">1</Property>-->  <!-- Prevent the Modify feature in Add/Remove Programs -->
+        <!--<Property Id="ARPNOREPAIR">1</Property>-->  <!-- Prevent the Repair feature in Add/Remove Programs -->
+
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLLOCATION" Name="Vici">
+                    <Directory Id="D_ViciExtensibility" Name="Plugin">
+                        <Component Id="C_Extensibility_Weather" Guid="DACC04E8-EE3F-4DA8-8EE4-C362ED195B7E">
+                            <File Id="F_Extensibility_Weather" Name="Vici.Weather.dll" Source="$(sys.SOURCEFILEDIR)..\..\_Build\$(var.Configuration)\Plugin\" KeyPath="yes" DiskId="1" />
+                        </Component>
+                    </Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<Feature Id="Feature_Vici" Title="VICI $(var.productVersion)" Level="1" Display="expand">
+            <Feature Id="FEAT_Extensibility" Title="Extensibility" Level="1" Display="expand">
+                <ComponentRef Id="C_Extensibility_Weather"/>
+            </Feature>
+		</Feature>
+        
+        <?include UI.wxi?>
+
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallInitialize"/>
+        </InstallExecuteSequence>
+
+    </Product>
+</Wix>

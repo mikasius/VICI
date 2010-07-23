@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Directories -->
+    <PropertyGroup>
+        <BasePath>$(MSBuildProjectDirectory)\..\</BasePath>
+        <ToolsPath>$(BasePath)tools\</ToolsPath>
+        <BuildOutputPath>$(BasePath)_build\</BuildOutputPath>
+        <ReportOutputPath>$(BuildOutputPath)Reports\</ReportOutputPath>
+        <SourceCodePath>$(BasePath)src\</SourceCodePath>
+    </PropertyGroup>
+    
+    <!-- Executable Related -->
+    <PropertyGroup>
+        <ZipExe>$(ToolsPath)7zip\7za.exe</ZipExe>
+        <GitExe>$(ToolsPath)Git\git.exe</GitExe>
+        <FxCopExe>$(ToolsPath)FxCop\FxCopCmd.exe</FxCopExe>
+        
+        <FxCopReport>$(ReportOutputPath)FxCop_Analysis.html</FxCopReport>
+        <CodeAnalysisDictionary>$(SourceCodePath)CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <Configuration>Release</Configuration>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <InstallerProject Include="$(BasePath)**\*.Installer.wixproj" />
+        
+        <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs" />
+    </ItemGroup>
+    
+    <Target Name="Clean">
+        <ItemGroup>
+            <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" />
+        </ItemGroup>
+        <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
+        <RemoveDir Directories="$(BuildOutputPath)" ContinueOnError="true"/>
+    </Target>
+    
+    <Target Name="Init" DependsOnTargets="Clean">
+        <MakeDir Directories="$(BuildOutputPath)" />
+        <MakeDir Directories="$(ReportOutputPath)" />
+    </Target>
+    
+    <Target Name="UpdateVersion">
+        <!-- Retrieve version numer -->
+    </Target>
+    
+    <Target Name="UpdateVersionFiles" DependsOnTargets="UpdateVersion">
+        <!-- Update VersionInfo.cs for assembly versions -->
+        <!-- Update Installer BuildProperties.wxi for installer version -->
+    </Target>
+    
+    <Target Name="Build" DependsOnTargets="Init;UpdateVersion">
+    </Target>
+    
+    <Target Name="Build_Tests" DependsOnTargets="Build">
+    </Target>
+    
+    <Target Name="Build_Installer" DependsOnTargets="Build">
+        <Message Text="Building Installer Package: @(InstallerProject)" />
+        <!-- Rename installer to include the version.  Like "VICI_0.0.1.0_Install.msi" -->
+    </Target>
+    
+    <Target Name="Build_All" DependsOnTargets="Build;Build_Tests;Build_Installer">
+    </Target>
+    
+    <Target Name="ArchiveSource" DependsOnTargets="UpdateVersion">
+        <Exec Command="$(GitExe) archive --format=zip -9 --output=$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_src.zip master" WorkingDirectory="$(BasePath)" />
+    </Target>
+    
+    <Import Project="$(ToolsPath)StyleCop\v4.4.0.12\Microsoft.StyleCop.Targets" />
+    <Target Name="AnalyzeAssemblies">
+        <ItemGroup>
+            <AssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\Vici*.dll" />
+        </ItemGroup>
+        <Exec Command="$(FxCopExe) @(AssembliesToAnalyze->'/file:%(FullPath)',' ') /out:$(FxCopReport) /dictionary:$(CodeAnalysisDictionary) /axsl /s /fo /searchgac /quiet" Condition=" '@(AssembliesToAnalyze)' != '' "/>
+        <Message Text="After FxCop" />
+        <StyleCopTask
+            SourceFiles="@(SourceFiles)"
+            ForceFullAnalysis="true"
+            OutputFile="$(ReportOutputPath)Stylecop.xml"
+            CacheResults="false"
+            ProjectFullPath="$(SourceCodePath)"
+            OverrideSettingsFile="$(SourceCodePath)Settings.StyleCop"
+            TreatErrorsAsWarnings="true" />
+        <Message Text="After StyleCop" />
+    </Target>
+</Project>
