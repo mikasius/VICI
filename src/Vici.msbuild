@@ -9,6 +9,12 @@
         <SourceCodePath>$(BasePath)src\</SourceCodePath>
     </PropertyGroup>
     
+    <PropertyGroup>
+        <MSBuildCommunityTasksPath>$(ToolsPath)MsBuild.CommunityTasks\1.3.0.489</MSBuildCommunityTasksPath>
+    </PropertyGroup>
+    
+    <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+
     <!-- Executable Related -->
     <PropertyGroup>
         <ZipExe>$(ToolsPath)7zip\7za.exe</ZipExe>
@@ -43,7 +49,23 @@
     </Target>
     
     <Target Name="UpdateVersion">
-        <!-- Retrieve version numer -->
+        <Exec Command="$(GitExe) describe --long > $(BuildOutputPath)_version" />
+        <ReadLinesFromFile File="$(BuildOutputPath)_version">
+            <Output TaskParameter="Lines" ItemName="VersionLines" />
+        </ReadLinesFromFile>
+        <Delete Files="$(BuildOutputPath)_version" />
+        <RegexReplace Input="@(VersionLines)" Expression="-.{8}$" Replacement="">
+            <Output TaskParameter="Output" ItemName="VersionTag" />
+        </RegexReplace>
+        <RegexReplace Input="@(VersionTag)" Expression="-" Replacement=".">
+            <Output TaskParameter="Output" ItemName="VersionTag1" />
+        </RegexReplace>
+        <RegexReplace Input="@(VersionTag1)" Expression="v" Replacement="">
+            <Output TaskParameter="Output" ItemName="VersionTag2" />
+        </RegexReplace>
+        <CreateProperty Value="@(VersionTag2)">
+            <Output TaskParameter="Value" PropertyName="Version" />
+        </CreateProperty>
     </Target>
     
     <Target Name="UpdateVersionFiles" DependsOnTargets="UpdateVersion">
