@@ -67,8 +67,14 @@ namespace Vici.Console
         [Conditional("DEBUG")]
         private static void Pause()
         {
+            Console.WriteLine();
             Console.Write(Resources.PressAnyKeyToContinue);
-            Console.ReadKey();
+            ConsoleKey keyPressed;
+            do
+            {
+                keyPressed = Console.ReadKey().Key;
+            }
+            while (keyPressed == ConsoleKey.VolumeDown || keyPressed == ConsoleKey.VolumeMute || keyPressed == ConsoleKey.VolumeUp);
         }
 
         /// <summary>

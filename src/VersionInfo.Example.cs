@@ -24,12 +24,10 @@
 using System.Reflection;
 
 // Version information for an assembly consists of the following four values:
-//
 //      Major Version
 //      Minor Version 
 //      Build Number
 //      Revision
-//
 [assembly: AssemblyVersion("999.999.999.999")]
 [assembly: AssemblyFileVersion("999.999.999.999")]
 [assembly: AssemblyInformationalVersion("999.999.999.999")]

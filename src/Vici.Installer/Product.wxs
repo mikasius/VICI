@@ -7,7 +7,7 @@
         
         <Property Id="NEWERPRODUCTFOUND" Secure="yes" />
         <Property Id="PREVIOUSVERSIONSINSTALLED" Secure="yes" />
-        <Upgrade Id="A68B772B-D4F4-4744-B508-E22D95D3B186">
+        <Upgrade Id="33b19c98-453f-4667-88c3-f339d8120e65">
             <UpgradeVersion IncludeMinimum="yes"
                             Minimum="$(var.productVersion)"
                             OnlyDetect="yes"
