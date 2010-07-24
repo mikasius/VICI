@@ -47,7 +47,7 @@
     </Target>
     
     <Target Name="UpdateVersion">
-        <Exec Command="$(GitExe) describe --long > $(BuildOutputPath)_version" Condition=" Exists('$(BasePath).git\') " ContinueOnError="true"/>
+        <Exec Command="$(GitExe) describe --tags > $(BuildOutputPath)_version" Condition=" Exists('$(BasePath).git\') " ContinueOnError="true"/>
         <ReadLinesFromFile File="$(BuildOutputPath)_version" Condition=" Exists('$(BuildOutputPath)_version') ">
             <Output TaskParameter="Lines" ItemName="VersionLines" />
         </ReadLinesFromFile>
