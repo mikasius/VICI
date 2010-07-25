@@ -20,8 +20,11 @@
         <ZipExe>$(ToolsPath)7zip\7za.exe</ZipExe>
         <GitExe>$(ToolsPath)Git\git.exe</GitExe>
         <FxCopExe>$(ToolsPath)FxCop\FxCopCmd.exe</FxCopExe>
+        <MspecExe>$(ToolsPath)Machine.Spec\mspec.exe</MspecExe>
         
         <FxCopReport>$(ReportOutputPath)FxCop_Analysis.html</FxCopReport>
+        <MspecHtmlReport>$(ReportOutputPath)Mspec_Report.html</MspecHtmlReport>
+        <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
         <CodeAnalysisDictionary>$(SourceCodePath)CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
     </PropertyGroup>
     
@@ -30,7 +33,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs" />
+        <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs;$(SourceCodePath)**\*.Tests\*;" />
     </ItemGroup>
     
     <Target Name="Clean">
@@ -95,16 +98,28 @@
     </Target>
     
     <Target Name="Build" DependsOnTargets="Init;UpdateVersion">
+        <Message Text="===== Building main projects =====" />
         <ItemGroup>
-            <ClientProject Include="$(SourceCodePath)**\Vici.Client.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Client.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Contracts.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Core.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Console.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.WindowsService.csproj" />
+            <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Weather.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(ClientProject)" Properties="Configuration=$(Configuration)" />
+        <MSBuild Projects="@(ProjectsToBuild )" Properties="Configuration=$(Configuration)" />
     </Target>
     
     <Target Name="Build_Tests" DependsOnTargets="Build">
+        <Message Text="===== Building test projects =====" />
+        <ItemGroup>
+            <CoreTestProject Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
+        </ItemGroup>
+        <MSBuild Projects="@(CoreTestProject)" Properties="Configuration=$(Configuration)" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
+        <Message Text="===== Building installer =====" />
         <!-- Copy the installer project to the build folder so updates don't affect source control -->
         <ItemGroup>
             <InstallerFiles Include="$(SourceCodePath)Vici.Installer\**\*.*" Exclude="$(SourceCodePath)Vici.Installer\bin\**\*.*;$(SourceCodePath)Vici.Installer\obj\**\*.*" />
@@ -148,9 +163,9 @@
     </Target>
     
     <Import Project="$(ToolsPath)StyleCop\v4.4.0.12\Microsoft.StyleCop.Targets" />
-    <Target Name="AnalyzeAssemblies" DependsOnTargets="Build">
+    <Target Name="AnalyzeAssemblies" DependsOnTargets="Init;Build;Build_Tests">
         <ItemGroup>
-            <AssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\Vici*.dll;$(BuildOutputPath)$(Configuration)\**\Vici*.exe" />
+            <AssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\Vici*.dll;$(BuildOutputPath)$(Configuration)\**\Vici*.exe" Exclude="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Tests.exe;" />
         </ItemGroup>
         <Message Text="AssembliesToAnalyze: @(AssembliesToAnalyze->'/file:%(FullPath)',' ')" />
         <Exec Command="$(FxCopExe) @(AssembliesToAnalyze->'/file:%(FullPath)',' ') /out:$(FxCopReport) /dictionary:$(CodeAnalysisDictionary) /axsl /s /fo /searchgac /quiet" Condition=" '@(AssembliesToAnalyze)' != '' "/>
@@ -164,7 +179,12 @@
             OverrideSettingsFile="$(SourceCodePath)Settings.StyleCop"
             TreatErrorsAsWarnings="true" />
         <Message Text="After StyleCop" />
+        
+        <ItemGroup>
+            <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
+        </ItemGroup>
+        <Exec Command="$(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ')" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
     </Target>
     
-    <Target Name="Everything" DependsOnTargets="ArchiveSource;AnalyzeAssemblies;Build_All;Build_Installer;Build_Tests;Build;" />
+    <Target Name="Everything" DependsOnTargets="ArchiveSource;AnalyzeAssemblies;Build_All;" />
 </Project>
