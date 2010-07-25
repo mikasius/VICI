@@ -66,6 +66,8 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="IViciEngine.cs" />
+    <Compile Include="IZone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
