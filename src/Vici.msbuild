@@ -107,7 +107,7 @@
             <ProjectsToBuild Include="$(SourceCodePath)**\Vici.WindowsService.csproj" />
             <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Weather.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(ProjectsToBuild )" Properties="Configuration=$(Configuration)" />
+        <MSBuild Projects="@(ProjectsToBuild )" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Tests" DependsOnTargets="Build">
@@ -115,7 +115,7 @@
         <ItemGroup>
             <CoreTestProject Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(CoreTestProject)" Properties="Configuration=$(Configuration)" />
+        <MSBuild Projects="@(CoreTestProject)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">

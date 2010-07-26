@@ -23,6 +23,7 @@
 
 namespace Vici.Core
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -34,6 +35,19 @@ namespace Vici.Core
     public class ViciEngine : IViciEngine
     {
         /// <summary>
+        /// Field holding the zones associated with this instance.
+        /// </summary>
+        private IList<IZone> zones;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViciEngine"/> class.
+        /// </summary>
+        public ViciEngine()
+        {
+            this.zones = new List<IZone>();
+        }
+
+        /// <summary>
         /// Gets the physical zones that Vici is aware of.
         /// </summary>
         /// <value>The zones.</value>
@@ -41,8 +55,17 @@ namespace Vici.Core
         {
             get
             {
-                return Enumerable.Empty<Zone>();
+                return this.zones;
             }
+        }
+
+        /// <summary>
+        /// Adds the zone.
+        /// </summary>
+        /// <param name="zone">The zone to add to the current instance.</param>
+        public void AddZone(IZone zone)
+        {
+            this.zones.Add(zone);
         }
     }
 }

@@ -1,9 +1,9 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IViciEngine.cs" company="Sleepless Monkey Development, Inc.">
-//   Copyright � 2010
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="When_Adding_A_New_Zone_To_A_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
+//   Copyright © 2010
 // </copyright>
 // <summary>
-//   An IViciEngine represents the controlling object that coordinates the entire system.
+//   Defines the When_Creating_A_New_Engine type.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,25 +21,27 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Contracts
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+namespace Vici.Core.Tests
 {
-    using System.Collections.Generic;
+    using System.Linq;
+    using Contracts;
+    using Machine.Specifications;
 
-    /// <summary>
-    /// An IViciEngine represents the controlling object that coordinates the entire system.
-    /// </summary>
-    public interface IViciEngine
+    [Subject(typeof(ViciEngine), "Add a new Zone")]
+    public class When_Adding_A_New_Zone_To_A_ViciEngine
     {
-        /// <summary>
-        /// Gets the physical zones that Vici is aware of.
-        /// </summary>
-        /// <value>The zones.</value>
-        IEnumerable<IZone> Zones { get; }
+        private static IViciEngine viciEngine;
 
-        /// <summary>
-        /// Adds the zone.
-        /// </summary>
-        /// <param name="zone">The zone to add to the current instance.</param>
-        void AddZone(IZone zone);
+        private Establish context = () => { viciEngine = new ViciEngine(); };
+
+        private Because Of = () =>
+            {
+                var zone = new Zone();
+                viciEngine.AddZone(zone);
+            };
+
+        private It Should_have_one_zone = () => viciEngine.Zones.Count().ShouldEqual(1);
     }
 }
