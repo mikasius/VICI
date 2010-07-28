@@ -33,7 +33,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs;$(SourceCodePath)**\*.Tests\*;" />
+        <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs;$(SourceCodePath)**\*.Tests\*;$(SourceCodePath)**\*.Tests\**\*;" />
     </ItemGroup>
     
     <Target Name="Clean">
@@ -188,5 +188,7 @@
         <Exec Command="$(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ')" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
     </Target>
     
-    <Target Name="Everything" DependsOnTargets="ArchiveSource;AnalyzeAssemblies;Build_All;" />
+    <Target Name="Everything" DependsOnTargets="ArchiveSource;Build_All;AnalyzeAssemblies;" />
+    
+    <Target Name="Development" DependsOnTargets="Build;Build_Tests;AnalyzeAssemblies;" />
 </Project>
