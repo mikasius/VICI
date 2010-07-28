@@ -46,7 +46,7 @@
     
     <Target Name="Init" DependsOnTargets="Clean">
         <MakeDir Directories="$(BuildOutputPath)" />
-        <MakeDir Directories="$(ReportOutputPath)" />
+        <MakeDir Directories="$(ReportOutputPath)" Condition=" !Exists('$(ReportOutputPath)')" />
     </Target>
     
     <Target Name="UpdateVersion">
@@ -164,6 +164,8 @@
     
     <Import Project="$(ToolsPath)StyleCop\v4.4.0.12\Microsoft.StyleCop.Targets" />
     <Target Name="AnalyzeAssemblies" DependsOnTargets="Init;Build;Build_Tests">
+        <!-- Attempt to make the directory, just in case it doesn't exist.  Occasionally running into errors of a path not existing. -->
+        <MakeDir Directories="$(ReportOutputPath)" Condition=" !Exists('$(ReportOutputPath)')" />
         <ItemGroup>
             <AssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\Vici*.dll;$(BuildOutputPath)$(Configuration)\**\Vici*.exe" Exclude="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Tests.exe;" />
         </ItemGroup>

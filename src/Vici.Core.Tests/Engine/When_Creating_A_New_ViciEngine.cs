@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IZone.cs" company="Sleepless Monkey Development, Inc.">
+// <copyright file="When_Creating_A_New_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   An IZone represents an individual physical zone that Vici can interact with.
+//   Defines the When_Creating_A_New_Engine type.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,17 +21,22 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Contracts
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.Engine
 {
-    /// <summary>
-    /// An IZone represents an individual physical zone that Vici can interact with.
-    /// </summary>
-    public interface IZone
+    using System.Linq;
+    using Contracts;
+    using Machine.Specifications;
+
+    [Subject(typeof(ViciEngine))]
+    public class When_Creating_A_New_ViciEngine
     {
-        /// <summary>
-        /// Gets or sets the user configured name.
-        /// </summary>
-        /// <value>The user provided name.</value>
-        string Name { get; set; }
+        private static IViciEngine viciEngine;
+
+        private Because Of = () => { viciEngine = new ViciEngine(); };
+
+        private It Should_have_no_predefined_zones = () => ShouldExtensionMethods.ShouldEqual(viciEngine.Zones.Count(), 0);
     }
 }

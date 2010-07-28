@@ -56,9 +56,12 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Engine\When_Adding_A_New_Zone_With_A_Name_To_A_ViciEngine.cs" />
+    <Compile Include="Engine\When_Adding_A_New_Zone_With_No_Name_To_A_ViciEngine.cs" />
+    <Compile Include="Engine\When_Adding_A_Null_Zone_To_A_ViciEngine.cs" />
+    <Compile Include="Engine\When_Creating_A_New_ViciEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="When_Adding_A_New_Zone_To_A_ViciEngine.cs" />
-    <Compile Include="When_Creating_A_New_ViciEngine.cs" />
+    <Compile Include="Engine\New_ViciEngine_Context.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vici.Contracts\Vici.Contracts.csproj">

@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IZone.cs" company="Sleepless Monkey Development, Inc.">
+// <copyright file="When_Adding_A_New_Zone_With_No_Name_To_A_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   An IZone represents an individual physical zone that Vici can interact with.
+//   Defines the When_Creating_A_New_Engine type.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,17 +21,28 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Contracts
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.Engine
 {
-    /// <summary>
-    /// An IZone represents an individual physical zone that Vici can interact with.
-    /// </summary>
-    public interface IZone
+    using System;
+
+    using Machine.Specifications;
+
+    [Subject(typeof(ViciEngine))]
+    public class When_Adding_A_New_Zone_With_No_Name_To_A_ViciEngine : New_ViciEngine_Context
     {
-        /// <summary>
-        /// Gets or sets the user configured name.
-        /// </summary>
-        /// <value>The user provided name.</value>
-        string Name { get; set; }
+        private static Exception Exception;
+
+        private Because Of = () =>
+            {
+                var zone = new Zone();
+                Exception = Catch.Exception(() => viciEngine.AddZone(zone));
+            };
+
+        private It Should_throw_an_error = () => Exception.ShouldBeOfType(typeof(ArgumentException));
+
+        private It Should_have_an_error_message_about_the_name = () => Exception.Message.ShouldContain("Name");
     }
 }

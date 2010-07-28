@@ -25,9 +25,7 @@ namespace Vici.Core
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-
-    using Vici.Contracts;
+    using Contracts;
 
     /// <summary>
     /// The ViciEngine represents the controlling object that coordinates the entire system.
@@ -65,6 +63,16 @@ namespace Vici.Core
         /// <param name="zone">The zone to add to the current instance.</param>
         public void AddZone(IZone zone)
         {
+            if (zone == null)
+            {
+                throw new ArgumentNullException("zone", "The zone cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(zone.Name))
+            {
+                throw new ArgumentException("The Zone's Name must be populated with non-whitespace characters.", "zone");
+            }
+
             this.zones.Add(zone);
         }
     }

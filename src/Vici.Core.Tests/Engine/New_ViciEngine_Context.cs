@@ -1,9 +1,9 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="When_Creating_A_New_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
-//   Copyright � 2010
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="New_ViciEngine_Context.cs" company="Sleepless Monkey Development, Inc.">
+//   Copyright © 2010
 // </copyright>
 // <summary>
-//   Defines the When_Creating_A_New_Engine type.
+//   
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -23,20 +23,17 @@
 
 #pragma warning disable 169
 // ReSharper disable InconsistentNaming
-namespace Vici.Core.Tests
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.Engine
 {
-    using System.Linq;
     using Contracts;
-    using Core;
     using Machine.Specifications;
 
     [Subject(typeof(ViciEngine))]
-    public class When_Creating_A_New_ViciEngine
+    public abstract class New_ViciEngine_Context
     {
-        private static IViciEngine viciEngine;
+        protected static IViciEngine viciEngine;
 
-        private Because Of = () => { viciEngine = new ViciEngine(); };
-
-        private It Should_have_no_predefined_zones = () => viciEngine.Zones.Count().ShouldEqual(0);
+        private Establish context = () => { viciEngine = new ViciEngine(); };
     }
 }

@@ -30,5 +30,10 @@ namespace Vici.Core
     /// </summary>
     public class Zone : IZone
     {
+        /// <summary>
+        /// Gets or sets the user configured name.
+        /// </summary>
+        /// <value>The user provided name.</value>
+        public string Name { get; set; }
     }
 }

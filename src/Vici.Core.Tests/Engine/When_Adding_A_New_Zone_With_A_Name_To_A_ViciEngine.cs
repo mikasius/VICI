@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="When_Adding_A_New_Zone_To_A_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
+// <copyright file="When_Adding_A_New_Zone_With_A_Name_To_A_ViciEngine.cs" company="Sleepless Monkey Development, Inc.">
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   Defines the When_Creating_A_New_Engine type.
+//   
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -23,25 +23,21 @@
 
 #pragma warning disable 169
 // ReSharper disable InconsistentNaming
-namespace Vici.Core.Tests
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.Engine
 {
     using System.Linq;
-    using Contracts;
     using Machine.Specifications;
 
-    [Subject(typeof(ViciEngine), "Add a new Zone")]
-    public class When_Adding_A_New_Zone_To_A_ViciEngine
+    [Subject(typeof(ViciEngine))]
+    public class When_Adding_A_New_Zone_With_A_Name_To_A_ViciEngine : New_ViciEngine_Context
     {
-        private static IViciEngine viciEngine;
-
-        private Establish context = () => { viciEngine = new ViciEngine(); };
-
         private Because Of = () =>
             {
-                var zone = new Zone();
+                var zone = new Zone { Name = "New Name" };
                 viciEngine.AddZone(zone);
             };
 
-        private It Should_have_one_zone = () => viciEngine.Zones.Count().ShouldEqual(1);
+        private It Should_have_one_zone = () => ShouldExtensionMethods.ShouldEqual(viciEngine.Zones.Count(), 1);
     }
 }
