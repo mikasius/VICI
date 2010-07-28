@@ -162,6 +162,13 @@
         <Exec Command="$(GitExe) archive --format=zip -9 --output=$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_src.zip master" WorkingDirectory="$(BasePath)" />
     </Target>
     
+    <Target Name="ArchiveBinaries" DependsOnTargets="UpdateVersion;Init;Build;">
+        <ItemGroup>
+            <BinariesToArchive Include="$(BuildOutputPath)$(Configuration)\**\*.*" Exclude="$(BuildOutputPath)**\*.pdb;$(BuildOutputPath)**\*.CodeAnalysisLog.xml;$(BuildOutputPath)**\*.lastcodeanalysissucceeded" />
+        </ItemGroup>
+        <!-- The @(BinariesToArchive) needs to be projected this way due to how 7za.exe handles relative paths and preserving subdirectories. -->
+        <Exec Command="$(ZipExe) a -tzip -mx9 -mmt -w$(BuildOutputPath)$(Configuration)\ $(BuildOutputPath)$(MSBuildProjectName)_$(Version)_bin.zip @(BinariesToArchive->'%(RecursiveDir)%(Filename)%(Extension)', ' ')" WorkingDirectory="$(BuildOutputPath)$(Configuration)\" />
+    </Target>
     <Import Project="$(ToolsPath)StyleCop\v4.4.0.12\Microsoft.StyleCop.Targets" />
     <Target Name="AnalyzeAssemblies" DependsOnTargets="Init;Build;Build_Tests">
         <!-- Attempt to make the directory, just in case it doesn't exist.  Occasionally running into errors of a path not existing. -->
@@ -188,7 +195,7 @@
         <Exec Command="$(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ')" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
     </Target>
     
-    <Target Name="Everything" DependsOnTargets="ArchiveSource;Build_All;AnalyzeAssemblies;" />
+    <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries" />
     
     <Target Name="Development" DependsOnTargets="Build;Build_Tests;AnalyzeAssemblies;" />
 </Project>
