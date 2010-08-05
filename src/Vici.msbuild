@@ -21,11 +21,17 @@
         <GitExe>$(ToolsPath)Git\git.exe</GitExe>
         <FxCopExe>$(ToolsPath)FxCop\FxCopCmd.exe</FxCopExe>
         <MspecExe>$(ToolsPath)Machine.Spec\mspec.exe</MspecExe>
+        <NcoverExe>$(ToolsPath)NCover\v3.4.12.6869\NCover.Console.exe</NcoverExe>
+        <NCoverReportingExe>$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe</NCoverReportingExe>
         
         <FxCopReport>$(ReportOutputPath)FxCop_Analysis.html</FxCopReport>
         <MspecHtmlReport>$(ReportOutputPath)Mspec_Report.html</MspecHtmlReport>
         <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
         <CodeAnalysisDictionary>$(SourceCodePath)CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
+        <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
+        <NCoverCoverageFile>$(ReportOutputPath)coverage.xml</NCoverCoverageFile>
+        <NCoverLogFile>$(ReportOutputPath)coverage.log</NCoverLogFile>
+        <NCoverHtmlPath>$(ReportOutputPath)NCover\</NCoverHtmlPath>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -36,12 +42,17 @@
         <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs;$(SourceCodePath)**\*.Tests\*;$(SourceCodePath)**\*.Tests\**\*;" />
     </ItemGroup>
     
+    <Target Name="__removeEmptyDirectories">
+        <Message Text="##### Removing empty directories after running '$(CallingTarget)' #####" />
+        <Exec Command="for /f &quot;usebackq&quot; %%d in (`&quot;dir /S /B /AD $(BuildOutputPath) | sort /R&quot;`) do rd &quot;%%d&quot;" />
+    </Target>
+
     <Target Name="Clean">
         <ItemGroup>
-            <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" />
+            <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" Exclude="$(NCoverTrendFile)"/>
         </ItemGroup>
         <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
-        <RemoveDir Directories="$(BuildOutputPath)" ContinueOnError="true"/>
+        <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Clean" />
     </Target>
     
     <Target Name="Init" DependsOnTargets="Clean">
@@ -152,7 +163,7 @@
             <_CopiedInstallerFiles Include="$(BuildOutputPath)Installer\**\*;$(BuildOutputPath)Installer\*" />
         </ItemGroup>
         <Delete Files="@(_CopiedInstallerFiles)" />
-        <RemoveDir Directories="$(BuildOutputPath)Installer\" ContinueOnError="true" />
+        <RemoveDir Directories="$(BuildOutputPath)Installer" ContinueOnError="true" />
     </Target>
     
     <Target Name="Build_All" DependsOnTargets="Build;Build_Tests;Build_Installer">
@@ -192,10 +203,17 @@
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        <Exec Command="$(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ')" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
+        <Exec Command="$(NcoverExe) $(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
+        <Exec Command="$(NCoverReportingExe) $(NCoverCoverageFile) //or FullCoverageReport //op $(NCoverHtmlPath) //at $(NCoverTrendFile) //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') " />
     </Target>
     
-    <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries" />
+    <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries">
+        <Message Text="Building everything" />
+        <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Everything" />
+    </Target>
     
-    <Target Name="Development" DependsOnTargets="Build;Build_Tests;AnalyzeAssemblies;" />
+    <Target Name="Development" DependsOnTargets="Build;Build_Tests;AnalyzeAssemblies;">
+        <Message Text="Building development build" />
+        <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Development" />
+    </Target>
 </Project>
