@@ -1,0 +1,1 @@
+This is a heavily modified version of NAudio.  Not likely to coincide with the main source.
