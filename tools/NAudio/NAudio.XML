@@ -183,7 +183,7 @@
             to anything that is not a whole multiple of this value
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveInStream.waveInPointer">
+        <member name="F:NAudio.Wave.WaveInStream.waveInHandle">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -1706,7 +1706,7 @@
             Exports this MIDI event's data
             Overriden in derived classes, but they should call this version
             </summary>
-            <param name="absoluteTimeInTicks">Absolute time used to calculate delta. 
+            <param name="absoluteTime">Absolute time used to calculate delta. 
             Is updated ready for the next delta calculation</param>
             <param name="writer">Stream to write to</param>
         </member>
@@ -2186,7 +2186,7 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Dmo.MediaBuffer.bufferLength">
+        <member name="F:NAudio.Dmo.MediaBuffer.length">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -2226,7 +2226,7 @@
             <summary>
             Gets the maximum length of the buffer
             </summary>
-            <param name="maximumLength">Max length (output parameter)</param>
+            <param name="maxLength">Max length (output parameter)</param>
             <returns>The HRESULT</returns>
         </member>
         <member name="M:NAudio.Dmo.MediaBuffer.NAudio#Dmo#IMediaBuffer#GetBufferAndLength(System.IntPtr,System.IntPtr)">
@@ -4503,7 +4503,7 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Mixer.UnsignedMixerControl.#ctor(NAudio.Mixer.MixerInterop.MixerControl,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
+        <member name="M:NAudio.Mixer.UnsignedMixerControl.#ctor(NAudio.Mixer.MixerInterop.MIXERCONTROL,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:NAudio.Mixer.UnsignedMixerControl"/> class.
             </summary>
@@ -6168,7 +6168,7 @@
             List text mixer control
             </summary>
         </member>
-        <member name="M:NAudio.Mixer.ListTextMixerControl.#ctor(NAudio.Mixer.MixerInterop.MixerControl,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
+        <member name="M:NAudio.Mixer.ListTextMixerControl.#ctor(NAudio.Mixer.MixerInterop.MIXERCONTROL,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:NAudio.Mixer.ListTextMixerControl"/> class.
             </summary>
@@ -6288,7 +6288,7 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="F:NAudio.Gui.TrackView.TrackHeader.internalTrack">
+        <member name="F:NAudio.Gui.TrackView.TrackHeader.track">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -6305,14 +6305,14 @@
             </summary>
             <param name="track">The track.</param>
         </member>
-        <member name="M:NAudio.Gui.TrackView.TrackHeader.VolumeSlider1VolumeChanged(System.Object,System.EventArgs)">
+        <member name="M:NAudio.Gui.TrackView.TrackHeader.volumeSlider1_VolumeChanged(System.Object,System.EventArgs)">
             <summary>
             Handles the VolumeChanged event of the volumeSlider1 control.
             </summary>
             <param name="sender">The source of the event.</param>
             <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         </member>
-        <member name="M:NAudio.Gui.TrackView.TrackHeader.PanSlider1PanChanged(System.Object,System.EventArgs)">
+        <member name="M:NAudio.Gui.TrackView.TrackHeader.panSlider1_PanChanged(System.Object,System.EventArgs)">
             <summary>
             Handles the PanChanged event of the panSlider1 control.
             </summary>
@@ -6587,7 +6587,7 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveChannel32.internalSourceBuffer">
+        <member name="F:NAudio.Wave.WaveChannel32.requiredBytesBuffer">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -7083,7 +7083,7 @@
             <summary>
             sets graph data
             </summary>
-            <param name="data">The initial data array.</param>
+            <param name="x">The initial data array.</param>
         </member>
         <member name="M:NAudio.Gui.Graph.Dispose(System.Boolean)">
             <summary>
@@ -7739,6 +7739,11 @@
             For use with VT_FILETIME
             </summary>
         </member>
+        <member name="F:NAudio.CoreAudioApi.PropVariant.puuid">
+            <summary>
+            For use VT_CLSID
+            </summary>
+        </member>
         <member name="F:NAudio.CoreAudioApi.PropVariant.blobVal">
             <summary>
             For use with VT_BLOB, VT_BLOBOBJECT
@@ -8024,7 +8029,7 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Mixer.SignedMixerControl.#ctor(NAudio.Mixer.MixerInterop.MixerControl,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
+        <member name="M:NAudio.Mixer.SignedMixerControl.#ctor(NAudio.Mixer.MixerInterop.MIXERCONTROL,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:NAudio.Mixer.SignedMixerControl"/> class.
             </summary>
@@ -10806,7 +10811,7 @@
             Events are raised as recorded buffers are made available
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveIn.waveInPointer">
+        <member name="F:NAudio.Wave.WaveIn.waveInHandle">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -12406,24 +12411,24 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="T:NAudio.Wave.WaveStreams.CueWaveFileReader">
+        <member name="T:NAudio.Wave.CueWaveFileReader">
             <summary>
             A wave file reader supporting cue reading
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveStreams.CueWaveFileReader.cues">
+        <member name="F:NAudio.Wave.CueWaveFileReader.cues">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveStreams.CueWaveFileReader.#ctor(System.String)">
+        <member name="M:NAudio.Wave.CueWaveFileReader.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveStreams.CueWaveFileReader"/> class.
+            Initializes a new instance of the <see cref="T:NAudio.Wave.CueWaveFileReader"/> class.
             Loads a wavefile and supports reading cues
             </summary>
             <param name="fileName">Name of the file.</param>
         </member>
-        <member name="P:NAudio.Wave.WaveStreams.CueWaveFileReader.Cues">
+        <member name="P:NAudio.Wave.CueWaveFileReader.Cues">
             <summary>
             Gets Cue List (can be null if cues not present)
             </summary>
@@ -12487,79 +12492,79 @@
             Gets The Wave Format
             </summary>
         </member>
-        <member name="T:NAudio.Wave.WaveOutThreadSafe">
+        <member name="T:NAudio.Wave.WaveOutputs.WaveOutThreadSafe">
             <summary>
             Represents a wave out device
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.waveOutHandle">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.hWaveOut">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.buffers">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.buffers">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.waveStream">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.waveStream">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.numBuffers">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.numBuffers">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.playbackState">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.playbackState">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.callback">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.callback">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.devNumber">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.devNumber">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.desiredLatency">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.desiredLatency">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.volume">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.volume">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.buffersQueued">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.buffersQueued">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.waveOutThread">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.waveOutThread">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.actionQueue">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.actionQueue">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutThreadSafe.workAvailable">
+        <member name="F:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.workAvailable">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.#ctor(System.Int32,System.Int32)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.#ctor(System.Int32,System.Int32)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutThreadSafe"/> class. 
+            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveOutThreadSafe"/> class. 
             Opens a WaveOut device
             </summary>
             <param name="devNumber">
@@ -12571,73 +12576,73 @@
             streaming to the audio device. This will be broken into 3 buffers
             </param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Finalize">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Finalize">
             <summary>
-            Finalizes an instance of the <see cref="T:NAudio.Wave.WaveOutThreadSafe"/> class. 
+            Finalizes an instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveOutThreadSafe"/> class. 
             Finalizer. Only called when user forgets to call <see>Dispose</see>
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.GetCapabilities(System.Int32)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.GetCapabilities(System.Int32)">
             <summary>
             Retrieves the capabilities of a waveOut device
             </summary>
             <param name="devNumber">Device to test</param>
             <returns>The WaveOut device capabilities</returns>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Init(NAudio.Wave.IWaveProvider)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Init(NAudio.Wave.IWaveProvider)">
             <summary>
             Initialises the WaveOut device
             </summary>
             <param name="waveProvider">Wave provider to play</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Play">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Play">
             <summary>
             Start playing the audio from the WaveStream
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Pause">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Pause">
             <summary>
             Pause the audio
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Resume">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Resume">
             <summary>
             Resume playing after a pause from the same position
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Stop">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Stop">
             <summary>
             Stop and reset the WaveOut device
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Dispose">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Dispose">
             <summary>
             Closes this WaveOut device
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Dispose(System.Boolean)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Dispose(System.Boolean)">
             <summary>
             Closes the WaveOut device and disposes of buffers
             </summary>
             <param name="disposing">True if called from <see>Dispose</see></param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.ThreadProc">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.ThreadProc">
             <summary>
             Threads the proc.
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Exit">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Exit">
             <summary>
             Exits this instance.
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.SetVolume(System.Int32)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.SetVolume(System.Int32)">
             <summary>
             Sets the volume.
             </summary>
             <param name="stereoVolume">The stereo volume.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.Callback(System.IntPtr,NAudio.Wave.MmeInterop.WaveInterop.WaveMessage,System.IntPtr,NAudio.Wave.WaveHeader,System.IntPtr)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Callback(System.IntPtr,NAudio.Wave.MmeInterop.WaveInterop.WaveMessage,System.IntPtr,NAudio.Wave.WaveHeader,System.IntPtr)">
             <summary>
             made non-static so that playing can be stopped here
             </summary>
@@ -12647,33 +12652,33 @@
             <param name="wavhdr">The wavhdr.</param>
             <param name="dwReserved">The dw reserved.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.OnBufferDone(NAudio.Wave.WaveOutBuffer)">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.OnBufferDone(NAudio.Wave.WaveOutBuffer)">
             <summary>
             Called when [buffer done].
             </summary>
             <param name="buffer">The buffer.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutThreadSafe.RaisePlaybackStopped">
+        <member name="M:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.RaisePlaybackStopped">
             <summary>
             Raises the playback stopped.
             </summary>
         </member>
-        <member name="E:NAudio.Wave.WaveOutThreadSafe.PlaybackStopped">
+        <member name="E:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.PlaybackStopped">
             <summary>
             Playback stopped
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutThreadSafe.DeviceCount">
+        <member name="P:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.DeviceCount">
             <summary>
             Gets Returns the number of Wave Out devices available in the system
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutThreadSafe.PlaybackState">
+        <member name="P:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.PlaybackState">
             <summary>
             Gets Playback State
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutThreadSafe.Volume">
+        <member name="P:NAudio.Wave.WaveOutputs.WaveOutThreadSafe.Volume">
             <summary>
             Gets or sets Volume for this device 1.0 is full scale
             </summary>
@@ -13706,58 +13711,58 @@
             reserved 5
             </summary>
         </member>
-        <member name="T:NAudio.Mixer.MixerInterop.MixerControl">
+        <member name="T:NAudio.Mixer.MixerInterop.MIXERCONTROL">
             <summary>
-            MixerControl struct
+            MIXERCONTROL struct
             http://msdn.microsoft.com/en-us/library/dd757293%28VS.85%29.aspx
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.cbStruct">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.cbStruct">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.dwControlID">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.dwControlID">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.dwControlType">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.dwControlType">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.fdwControl">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.fdwControl">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.cMultipleItems">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.cMultipleItems">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.szShortName">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.szShortName">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.szName">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.szName">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.BoundsField">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.Bounds">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControl.MetricsField">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROL.Metrics">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="T:NAudio.Mixer.MixerInterop.MixerControlDetailsBoolean">
+        <member name="T:NAudio.Mixer.MixerInterop.MIXERCONTROLDETAILS_BOOLEAN">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -13765,7 +13770,7 @@
             http://msdn.microsoft.com/en-us/library/dd757295%28VS.85%29.aspx
             </remarks>
         </member>
-        <member name="F:NAudio.Mixer.MixerInterop.MixerControlDetailsBoolean.fValue">
+        <member name="F:NAudio.Mixer.MixerInterop.MIXERCONTROLDETAILS_BOOLEAN.fValue">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -14518,7 +14523,7 @@
             Represents a wave out device
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOut.waveOutHandle">
+        <member name="F:NAudio.Wave.WaveOut.hWaveOut">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
@@ -16965,31 +16970,31 @@
             Gets Xing header if present
             </summary>
         </member>
-        <member name="T:NAudio.Wave.WaveProviders.WaveRecorder">
+        <member name="T:NAudio.Wave.WaveRecorder">
             <summary>
             Utility class to intercept audio from an IWaveProvider and
             save it to disk
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveProviders.WaveRecorder.writer">
+        <member name="F:NAudio.Wave.WaveRecorder.writer">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveProviders.WaveRecorder.source">
+        <member name="F:NAudio.Wave.WaveRecorder.source">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveProviders.WaveRecorder.#ctor(NAudio.Wave.IWaveProvider,System.String)">
+        <member name="M:NAudio.Wave.WaveRecorder.#ctor(NAudio.Wave.IWaveProvider,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveProviders.WaveRecorder"/> class.
+            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveRecorder"/> class.
             Constructs a new WaveRecorder
             </summary>
             <param name="source">The Source Wave Provider</param>
             <param name="destination">The location to write the WAV file to</param>
         </member>
-        <member name="M:NAudio.Wave.WaveProviders.WaveRecorder.Read(System.Byte[],System.Int32,System.Int32)">
+        <member name="M:NAudio.Wave.WaveRecorder.Read(System.Byte[],System.Int32,System.Int32)">
             <summary>
             Read simply returns what the source returns, but writes to disk along the way
             </summary>
@@ -17000,69 +17005,69 @@
             the number of bytes written to the buffer.
             </returns>
         </member>
-        <member name="M:NAudio.Wave.WaveProviders.WaveRecorder.Dispose">
+        <member name="M:NAudio.Wave.WaveRecorder.Dispose">
             <summary>
             Closes the WAV file
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveProviders.WaveRecorder.WaveFormat">
+        <member name="P:NAudio.Wave.WaveRecorder.WaveFormat">
             <summary>
             Gets The WaveFormat
             </summary>
         </member>
-        <member name="T:NAudio.Wave.WaveOutputs.WaveFileWriter">
+        <member name="T:NAudio.Wave.WaveFileWriter">
             <summary>
             This class writes WAV data to a .wav file on disk
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.outStream">
+        <member name="F:NAudio.Wave.WaveFileWriter.outStream">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.writer">
+        <member name="F:NAudio.Wave.WaveFileWriter.writer">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.dataSizePos">
+        <member name="F:NAudio.Wave.WaveFileWriter.dataSizePos">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.factSampleCountPos">
+        <member name="F:NAudio.Wave.WaveFileWriter.factSampleCountPos">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.dataChunkSize">
+        <member name="F:NAudio.Wave.WaveFileWriter.dataChunkSize">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.format">
+        <member name="F:NAudio.Wave.WaveFileWriter.format">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.overwriting">
+        <member name="F:NAudio.Wave.WaveFileWriter.overwriting">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.filename">
+        <member name="F:NAudio.Wave.WaveFileWriter.filename">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.WaveFileWriter.value24">
+        <member name="F:NAudio.Wave.WaveFileWriter.value24">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.#ctor(System.IO.Stream,NAudio.Wave.WaveFormat)">
+        <member name="M:NAudio.Wave.WaveFileWriter.#ctor(System.IO.Stream,NAudio.Wave.WaveFormat)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveFileWriter"/> class. 
+            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveFileWriter"/> class. 
             WaveFileWriter that actually writes to a stream
             </summary>
             <param name="outStream">
@@ -17072,18 +17077,18 @@
             Wave format to use
             </param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.#ctor(System.String)">
+        <member name="M:NAudio.Wave.WaveFileWriter.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveFileWriter"/> class. 
+            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveFileWriter"/> class. 
             Creates a new WaveFileWriter, simply overwriting the samples on an existing file
             </summary>
             <param name="filename">
             The filename
             </param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.#ctor(System.String,NAudio.Wave.WaveFormat)">
+        <member name="M:NAudio.Wave.WaveFileWriter.#ctor(System.String,NAudio.Wave.WaveFormat)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveFileWriter"/> class. 
+            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveFileWriter"/> class. 
             Creates a new WaveFileWriter
             </summary>
             <param name="filename">
@@ -17093,20 +17098,20 @@
             The Wave Format of the output data
             </param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.Finalize">
+        <member name="M:NAudio.Wave.WaveFileWriter.Finalize">
             <summary>
-            Finalizes an instance of the <see cref="T:NAudio.Wave.WaveOutputs.WaveFileWriter"/> class. 
+            Finalizes an instance of the <see cref="T:NAudio.Wave.WaveFileWriter"/> class. 
             Finaliser - should only be called if the user forgot to close this WaveFileWriter
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.CreateWaveFile(System.String,NAudio.Wave.WaveStream)">
+        <member name="M:NAudio.Wave.WaveFileWriter.CreateWaveFile(System.String,NAudio.Wave.WaveStream)">
             <summary>
             Creates a Wave file by reading all the data from a WaveStream
             </summary>
             <param name="filename">The filename to use</param>
             <param name="stream">The source WaveStream</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.WriteData(System.Byte[],System.Int32,System.Int32)">
+        <member name="M:NAudio.Wave.WaveFileWriter.WriteData(System.Byte[],System.Int32,System.Int32)">
             <summary>
             Writes bytes to the WaveFile (assumes they are already in the correct format)
             </summary>
@@ -17114,13 +17119,13 @@
             <param name="offset">the offset from which to start writing</param>
             <param name="count">the number of bytes to write</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.WriteSample(System.Single)">
+        <member name="M:NAudio.Wave.WaveFileWriter.WriteSample(System.Single)">
             <summary>
             Writes a single sample to the Wave file
             </summary>
             <param name="sample">the sample to write (assumed floating point with 1.0f as max value)</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.WriteData(System.Int16[],System.Int32,System.Int32)">
+        <member name="M:NAudio.Wave.WaveFileWriter.WriteData(System.Int16[],System.Int32,System.Int32)">
             <summary>
             Writes 16 bit samples to the Wave file
             </summary>
@@ -17128,7 +17133,7 @@
             <param name="offset">The offset from which to start writing</param>
             <param name="count">The number of 16 bit samples to write</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.WriteData(System.Single[][],System.Int32,System.Int32)">
+        <member name="M:NAudio.Wave.WaveFileWriter.WriteData(System.Single[][],System.Int32,System.Int32)">
             <summary>
             Writes float samples to the Wave file
             </summary>
@@ -17136,54 +17141,54 @@
             <param name="offset">The offset from which to start writing</param>
             <param name="count">The number of float samples to write</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.Flush">
+        <member name="M:NAudio.Wave.WaveFileWriter.Flush">
             <summary>
             Ensures data is written to disk
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.Close">
+        <member name="M:NAudio.Wave.WaveFileWriter.Close">
             <summary>
             Closes this WaveFile (calls <see>Dispose</see>)
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.Dispose">
+        <member name="M:NAudio.Wave.WaveFileWriter.Dispose">
             <summary>
             Closes this WaveFile
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.Dispose(System.Boolean)">
+        <member name="M:NAudio.Wave.WaveFileWriter.Dispose(System.Boolean)">
             <summary>
             Actually performs the close,making sure the header contains the correct data
             </summary>
             <param name="disposing">True if called from <see>Dispose</see></param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.UpdateHeader(System.IO.BinaryWriter)">
+        <member name="M:NAudio.Wave.WaveFileWriter.UpdateHeader(System.IO.BinaryWriter)">
             <summary>
             Updates the header with file size information
             </summary>
-            <param name="binaryWriter">The binary writer.</param>
+            <param name="writer">The binary writer.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.WriteDataChunkHeader">
+        <member name="M:NAudio.Wave.WaveFileWriter.WriteDataChunkHeader">
             <summary>
             Writes the data chunk header.
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.WaveFileWriter.CreateFactChunk">
+        <member name="M:NAudio.Wave.WaveFileWriter.CreateFactChunk">
             <summary>
             Creates the fact chunk.
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutputs.WaveFileWriter.Filename">
+        <member name="P:NAudio.Wave.WaveFileWriter.Filename">
             <summary>
             Gets The wave file name
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutputs.WaveFileWriter.Length">
+        <member name="P:NAudio.Wave.WaveFileWriter.Length">
             <summary>
             Gets Number of bytes of audio
             </summary>
         </member>
-        <member name="P:NAudio.Wave.WaveOutputs.WaveFileWriter.WaveFormat">
+        <member name="P:NAudio.Wave.WaveFileWriter.WaveFormat">
             <summary>
             Gets WaveFormat of this wave file
             </summary>
@@ -18632,7 +18637,7 @@
             Custom Mixer control
             </summary>
         </member>
-        <member name="M:NAudio.Mixer.CustomMixerControl.#ctor(NAudio.Mixer.MixerInterop.MixerControl,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
+        <member name="M:NAudio.Mixer.CustomMixerControl.#ctor(NAudio.Mixer.MixerInterop.MIXERCONTROL,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:NAudio.Mixer.CustomMixerControl"/> class.
             </summary>
@@ -19248,38 +19253,38 @@
             Originally known as DMO_OUTPUT_DATA_BUFFERF_INCOMPLETE
             </summary>
         </member>
-        <member name="T:NAudio.Wave.WaveOutputs.CueWaveFileWriter">
+        <member name="T:NAudio.Wave.CueWaveFileWriter">
             <summary>
             A wave file writer that adds cue support
             </summary>
         </member>
-        <member name="F:NAudio.Wave.WaveOutputs.CueWaveFileWriter.cues">
+        <member name="F:NAudio.Wave.CueWaveFileWriter.cues">
             <summary>
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.CueWaveFileWriter.#ctor(System.String,NAudio.Wave.WaveFormat)">
+        <member name="M:NAudio.Wave.CueWaveFileWriter.#ctor(System.String,NAudio.Wave.WaveFormat)">
             <summary>
-            Initializes a new instance of the <see cref="T:NAudio.Wave.WaveOutputs.CueWaveFileWriter"/> class.
+            Initializes a new instance of the <see cref="T:NAudio.Wave.CueWaveFileWriter"/> class.
             Writes a wave file, including a cues chunk
             </summary>
             <param name="fileName">Name of the file.</param>
             <param name="waveFormat">The wave format.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.CueWaveFileWriter.AddCue(System.Int32,System.String)">
+        <member name="M:NAudio.Wave.CueWaveFileWriter.AddCue(System.Int32,System.String)">
             <summary>
             Adds a cue to the Wave file
             </summary>
             <param name="position">Sample position</param>
             <param name="label">Label text</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.CueWaveFileWriter.UpdateHeader(System.IO.BinaryWriter)">
+        <member name="M:NAudio.Wave.CueWaveFileWriter.UpdateHeader(System.IO.BinaryWriter)">
             <summary>
             Updates the header, and writes the cues out
             </summary>
             <param name="writer">The binary writer.</param>
         </member>
-        <member name="M:NAudio.Wave.WaveOutputs.CueWaveFileWriter.WriteCues(System.IO.BinaryWriter)">
+        <member name="M:NAudio.Wave.CueWaveFileWriter.WriteCues(System.IO.BinaryWriter)">
             <summary>
             Writes the cues.
             </summary>
@@ -20668,13 +20673,6 @@
             IPropertyStore COM interface
             </param>
         </member>
-        <member name="M:NAudio.CoreAudioApi.PropertyStore.Contains(System.Guid)">
-            <summary>
-            Contains property guid
-            </summary>
-            <param name="guid">Looks for a specific Guid</param>
-            <returns>True if found</returns>
-        </member>
         <member name="M:NAudio.CoreAudioApi.PropertyStore.Contains(NAudio.CoreAudioApi.PropertyKey)">
             <summary>
             Determines whether [contains] [the specified property key].
@@ -20709,13 +20707,6 @@
             </summary>
             <param name="index">Property index</param>
             <returns>The property</returns>
-        </member>
-        <member name="P:NAudio.CoreAudioApi.PropertyStore.Item(System.Guid)">
-            <summary>
-            Indexer by guid
-            </summary>
-            <param name="guid">Property guid</param>
-            <returns>Property or null if not found</returns>
         </member>
         <member name="P:NAudio.CoreAudioApi.PropertyStore.Item(NAudio.CoreAudioApi.PropertyKey)">
             <summary>
@@ -22099,7 +22090,7 @@
             TODO: Fill in with actual documentation
             </summary>
         </member>
-        <member name="M:NAudio.Mixer.BooleanMixerControl.#ctor(NAudio.Mixer.MixerInterop.MixerControl,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
+        <member name="M:NAudio.Mixer.BooleanMixerControl.#ctor(NAudio.Mixer.MixerInterop.MIXERCONTROL,System.IntPtr,NAudio.Mixer.MixerFlags,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:NAudio.Mixer.BooleanMixerControl"/> class.
             </summary>
