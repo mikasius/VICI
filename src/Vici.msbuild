@@ -235,7 +235,9 @@
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        <Exec Command="$(NcoverExe) $(MspecExe) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
+        <Exec Command="$(NcoverExe) $(MspecExe) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
+        </Exec>
         <Exec Command="$(NCoverReportingExe) $(NCoverCoverageFile) //or FullCoverageReport //op $(NCoverHtmlPath) //at $(NCoverTrendFile) //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') " />
         <ItemGroup>
             <XslFile Include="$(ToolsPath)Machine.Spec\Mspec_Report.xsl" />
@@ -243,6 +245,8 @@
         </ItemGroup>
         <Copy SourceFiles="@(XslFile)" DestinationFolder="$(ReportOutputPath)" />
         <InsertLine Path="$(MspecXmlReport)" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;Mspec_Report.xsl&quot;?&gt;" />
+        
+        <Error Code="$(NcoverExitCode)" Text="NCover has returned with an error, most likely due to failing specifications.  Please review all the report outputs." Condition=" '$(NcoverExitCode)' != '0' " />
     </Target>
     
     <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries">
