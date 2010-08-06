@@ -23,6 +23,8 @@
 
 namespace Vici.Core
 {
+    using System;
+    using System.IO;
     using Contracts;
 
     /// <summary>
@@ -31,9 +33,47 @@ namespace Vici.Core
     public class Zone : IZone
     {
         /// <summary>
+        /// The backing field for the output stream.
+        /// </summary>
+        private Stream outputStream;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Zone"/> class.
+        /// </summary>
+        /// <param name="speechSynthesizerBase">The speech synthesizer base.</param>
+        public Zone(SpeechSynthesizerBase speechSynthesizerBase)
+        {
+            this.SpeechSynthesizer = speechSynthesizerBase;
+        }
+
+        /// <summary>
         /// Gets or sets the user configured name.
         /// </summary>
         /// <value>The user provided name.</value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets the speech synthesizer specific to this zone.
+        /// </summary>
+        /// <value>The speech synthesizer.</value>
+        public SpeechSynthesizerBase SpeechSynthesizer { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the stream where the audio it output to.
+        /// </summary>
+        /// <value>The output audio stream.</value>
+        public Stream OutputStream
+        {
+            get
+            {
+                return this.outputStream;
+            }
+
+            set
+            {
+                this.outputStream = value;
+                this.SpeechSynthesizer.SetOutputToWaveStream(this.outputStream);
+            }
+        }
     }
 }

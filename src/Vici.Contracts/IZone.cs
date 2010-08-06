@@ -23,6 +23,8 @@
 
 namespace Vici.Contracts
 {
+    using System.IO;
+
     /// <summary>
     /// An IZone represents an individual physical zone that Vici can interact with.
     /// </summary>
@@ -33,5 +35,17 @@ namespace Vici.Contracts
         /// </summary>
         /// <value>The user provided name.</value>
         string Name { get; set; }
+
+        /// <summary>
+        /// Gets the speech synthesizer specific to this zone.
+        /// </summary>
+        /// <value>The speech synthesizer.</value>
+        SpeechSynthesizerBase SpeechSynthesizer { get; }
+
+        /// <summary>
+        /// Gets or sets the stream where the audio it output to.
+        /// </summary>
+        /// <value>The output audio stream.</value>
+        Stream OutputStream { get; set; }
     }
 }

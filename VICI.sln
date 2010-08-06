@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CA42F4BC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vici.Core.Tests", "src\Vici.Core.Tests\Vici.Core.Tests.csproj", "{C1EDF3A7-1E95-4FF5-9EB8-12F75E2FD914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vici.Contracts.Tests", "src\Vici.Contracts.Tests\Vici.Contracts.Tests.csproj", "{01CA06F5-103A-4937-A87E-20FD7CF8C77A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,16 @@ Global
 		{C1EDF3A7-1E95-4FF5-9EB8-12F75E2FD914}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C1EDF3A7-1E95-4FF5-9EB8-12F75E2FD914}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C1EDF3A7-1E95-4FF5-9EB8-12F75E2FD914}.Release|x86.ActiveCfg = Release|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,5 +154,6 @@ Global
 		{D3AD6A0A-1C5D-4B9D-BBD7-21572FAC0DC5} = {0416D99A-BC04-4455-9221-DFF724B95457}
 		{1CB5624A-C550-4CD6-8435-971026BA3CCE} = {F7643830-A980-4909-AF76-237D82AA9CA4}
 		{C1EDF3A7-1E95-4FF5-9EB8-12F75E2FD914} = {CA42F4BC-82CD-424E-8AE3-CE40BD3679D0}
+		{01CA06F5-103A-4937-A87E-20FD7CF8C77A} = {CA42F4BC-82CD-424E-8AE3-CE40BD3679D0}
 	EndGlobalSection
 EndGlobal

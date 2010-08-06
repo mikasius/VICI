@@ -27,7 +27,7 @@
 namespace Vici.Core.Tests.Engine
 {
     using System;
-
+    using Contracts;
     using Machine.Specifications;
 
     [Subject(typeof(ViciEngine))]
@@ -37,7 +37,8 @@ namespace Vici.Core.Tests.Engine
 
         private Because Of = () =>
             {
-                var zone = new Zone();
+                var speechSynthesizerMock = new Moq.Mock<SpeechSynthesizerBase>();
+                var zone = new Zone(speechSynthesizerMock.Object);
                 Exception = Catch.Exception(() => viciEngine.AddZone(zone));
             };
 

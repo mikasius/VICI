@@ -73,6 +73,11 @@ namespace Vici.Core
                 throw new ArgumentException("The Zone's Name must be populated with non-whitespace characters.", "zone");
             }
 
+            if (zone.SpeechSynthesizer == null)
+            {
+                throw new ArgumentNullException("zone", "The Zone's SpeechSynthesizer must be set before it can be added to a ViciEngine.");
+            }
+
             this.zones.Add(zone);
         }
     }

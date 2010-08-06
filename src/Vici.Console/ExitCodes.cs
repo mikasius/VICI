@@ -29,7 +29,7 @@ namespace Vici.Console
     public static class ExitCodes
     {
         /// <summary>
-        /// There are invalid command line arguments 
+        /// There are invalid command line arguments.
         /// </summary>
         public const int InvalidArguments = 1;
     }

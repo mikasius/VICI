@@ -3,7 +3,7 @@
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   
+//   Relates to adding a new zone to a ViciEngine.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -27,6 +27,7 @@
 namespace Vici.Core.Tests.Engine
 {
     using System.Linq;
+    using Contracts;
     using Machine.Specifications;
 
     [Subject(typeof(ViciEngine))]
@@ -34,7 +35,8 @@ namespace Vici.Core.Tests.Engine
     {
         private Because Of = () =>
             {
-                var zone = new Zone { Name = "New Name" };
+                var speechSynthesizerMock = new Moq.Mock<SpeechSynthesizerBase>();
+                var zone = new Zone(speechSynthesizerMock.Object) { Name = "New Name" };
                 viciEngine.AddZone(zone);
             };
 

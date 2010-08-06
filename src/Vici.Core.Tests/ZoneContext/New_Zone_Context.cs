@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Sleepless Monkey Development, Inc.">
-//   Copyright © 2010
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="New_Zone_Context.cs" company="Sleepless Monkey Development, Inc.">
+//   Copyright � 2010
 // </copyright>
 // <summary>
-//   Interaction logic for MainWindow.xaml
+//   Defines the New_Zone_Context type.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,33 +21,24 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Client
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.ZoneContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+    using Contracts;
+    using Machine.Specifications;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml.
-    /// </summary>
-    public partial class MainWindow : Window
+    public class New_Zone_Context
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
+        protected static IZone zone;
+        protected static Moq.Mock<SpeechSynthesizerBase> speechSynthesizerMock;
+
+        private Establish context = () =>
         {
-            this.InitializeComponent();
-        }
+            speechSynthesizerMock = new Moq.Mock<SpeechSynthesizerBase>();
+            zone = new Zone(speechSynthesizerMock.Object) { Name = "new zone" };
+        };
+
     }
 }

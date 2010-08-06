@@ -3,7 +3,7 @@
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   
+//   Relates to when trying to add an invalid zone to a ViciEngine.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated

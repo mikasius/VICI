@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Sleepless Monkey Development, Inc.">
-//   Copyright © 2010
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="After_Setting_The_OutputStream.cs" company="Sleepless Monkey Development, Inc.">
+//   Copyright � 2010
 // </copyright>
 // <summary>
-//   Interaction logic for MainWindow.xaml
+//   Tests related to the setting and retrieval of the output stream.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,33 +21,24 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Client
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.ZoneContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+    using System.IO;
+    using Machine.Specifications;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml.
-    /// </summary>
-    public partial class MainWindow : Window
+    public class After_Setting_The_OutputStream : New_Zone_Context
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
-        {
-            this.InitializeComponent();
-        }
+        private static Stream outputStream;
+
+        private Because of = () =>
+                                 {
+                                     outputStream = new MemoryStream();
+                                     zone.OutputStream = outputStream;
+                                 };
+
+        private It The_OutputStream_is_the_same_instance = () => zone.OutputStream.ShouldEqual(outputStream);
     }
 }

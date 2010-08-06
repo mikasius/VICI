@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Sleepless Monkey Development, Inc.">
+// <copyright file="AssemblyInfo.cs" company="Sleepless Monkey Development, Inc.">
 //   Copyright © 2010
 // </copyright>
 // <summary>
-//   Interaction logic for MainWindow.xaml
+//   AssemblyInfo.cs
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,33 +21,15 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Client
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml.
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
-        {
-            this.InitializeComponent();
-        }
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Vici.Contracts.Tests")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyProduct("Vici.Contracts.Tests")]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("9d6259aa-1653-4057-82d7-154e1167a76d")]

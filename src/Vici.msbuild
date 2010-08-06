@@ -25,7 +25,6 @@
         <NCoverReportingExe>$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe</NCoverReportingExe>
         
         <FxCopReport>$(ReportOutputPath)FxCop_Analysis.html</FxCopReport>
-        <MspecHtmlReport>$(ReportOutputPath)Mspec_Report.html</MspecHtmlReport>
         <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
         <CodeAnalysisDictionary>$(SourceCodePath)CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
         <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
@@ -41,6 +40,34 @@
     <ItemGroup>
         <SourceFiles Include="$(SourceCodePath)**\*.cs" Exclude="$(SourceCodePath)**\*.Designer.cs;$(SourceCodePath)VersionInfo.cs;$(SourceCodePath)**\*.Tests\*;$(SourceCodePath)**\*.Tests\**\*;" />
     </ItemGroup>
+    
+    <UsingTask TaskName="InsertLine" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <Path ParameterType="System.String" Required="true" />
+            <LineNumber ParameterType="System.Int32" Required="false" />
+            <Text ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Code Type="Fragment" Language="cs"><![CDATA[
+            IEnumerable<string> readLines = File.ReadLines(Path);
+            int lineCount = 0;
+            StringBuilder newContent = new StringBuilder();
+            foreach (string readLine in readLines)
+            {
+                if (lineCount == LineNumber)
+                {
+                    newContent.AppendLine(Text);
+                }
+
+                newContent.AppendLine(readLine);
+
+                lineCount++;
+            }
+
+            File.WriteAllText(Path, newContent.ToString());
+]]></Code>
+        </Task>
+    </UsingTask>
     
     <Target Name="__removeEmptyDirectories">
         <Message Text="##### Removing empty directories after running '$(CallingTarget)' #####" />
@@ -124,9 +151,10 @@
     <Target Name="Build_Tests" DependsOnTargets="Build">
         <Message Text="===== Building test projects =====" />
         <ItemGroup>
-            <CoreTestProject Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
+            <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
+            <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Contracts.Tests.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(CoreTestProject)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
+        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
@@ -203,8 +231,13 @@
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        <Exec Command="$(NcoverExe) $(MspecExe) --html $(MspecHtmlReport) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
+        <Exec Command="$(NcoverExe) $(MspecExe) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " />
         <Exec Command="$(NCoverReportingExe) $(NCoverCoverageFile) //or FullCoverageReport //op $(NCoverHtmlPath) //at $(NCoverTrendFile) //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') " />
+        <ItemGroup>
+            <XslFile Include="$(ToolsPath)Machine.Spec\Mspec_Report.xsl" />
+        </ItemGroup>
+        <Copy SourceFiles="@(XslFile)" DestinationFolder="$(ReportOutputPath)" />
+        <InsertLine Path="$(MspecXmlReport)" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;Mspec_Report.xsl&quot;?&gt;" />
     </Target>
     
     <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries">

@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Sleepless Monkey Development, Inc.">
-//   Copyright © 2010
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="When_Adding_A_Zone_With_A_Null_SpeechSynthesizerBase.cs" company="Sleepless Monkey Development, Inc.">
+//   Copyright � 2010
 // </copyright>
 // <summary>
-//   Interaction logic for MainWindow.xaml
+//   Relates to adding a new zone to a ViciEngine.
 // </summary>
 // <license>
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -21,33 +21,26 @@
 // </license>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Vici.Client
+
+#pragma warning disable 169
+// ReSharper disable InconsistentNaming
+// ReSharper disable InvokeAsExtensionMethod
+namespace Vici.Core.Tests.Engine
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+    using Machine.Specifications;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml.
-    /// </summary>
-    public partial class MainWindow : Window
+    [Subject(typeof(ViciEngine))]
+    public class When_Adding_A_Zone_With_A_Null_SpeechSynthesizerBase : New_ViciEngine_Context
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
-        {
-            this.InitializeComponent();
-        }
+        private static Exception Exception;
+
+        private Because Of = () =>
+                                 {
+                                     var zone = new Zone(null) { Name = "Name" };
+                                     Exception = Catch.Exception(() => viciEngine.AddZone(zone));
+                                 };
+
+        private It Should_have_thrown_an_ArgumentNullException = () => Exception.ShouldBeOfType(typeof(ArgumentNullException));
     }
 }
