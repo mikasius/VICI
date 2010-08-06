@@ -88,9 +88,21 @@
                         font-size: .7em;
                         text-align: right;
                     }
+                    
+                    .overallSummary
+                    {
+                        float: right;
+                        margin-top: 0;
+                        margin-bottom: 0;
+                        padding-top: 0;
+                        padding-bottom: 0;
+                    }
                 </style>
             </head>
             <body>
+                <div class="overallSummary">
+                    Passed specifications: <xsl:value-of select="count(//specification[@status = 'passed'])" />/<xsl:value-of select="count(//specification)" /> (<xsl:value-of select="ceiling(count(//specification[@status = 'passed']) div count(//specification) * 100)" />%)
+                </div>
                 <div>Generated on <xsl:value-of select="MSpec/generated/date" /> at <xsl:value-of select="/MSpec/generated/time" />.</div>
                 <xsl:for-each select="/MSpec/assembly">
                     <xsl:sort select="@name" />
