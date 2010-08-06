@@ -226,6 +226,10 @@
             ProjectFullPath="$(SourceCodePath)"
             OverrideSettingsFile="$(SourceCodePath)Settings.StyleCop"
             TreatErrorsAsWarnings="true" />
+        <ItemGroup>
+        </ItemGroup>
+        <InsertLine Path="$(ReportOutputPath)Stylecop.xml" LineNumber="0" Text="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;" />
+        <InsertLine Path="$(ReportOutputPath)Stylecop.xml" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;StyleCop.xsl&quot;?&gt;" />
         <Message Text="After StyleCop" />
         
         <ItemGroup>
@@ -235,6 +239,7 @@
         <Exec Command="$(NCoverReportingExe) $(NCoverCoverageFile) //or FullCoverageReport //op $(NCoverHtmlPath) //at $(NCoverTrendFile) //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') " />
         <ItemGroup>
             <XslFile Include="$(ToolsPath)Machine.Spec\Mspec_Report.xsl" />
+            <XslFile Include="$(ToolsPath)StyleCop\v4.4.0.12\StyleCop.xsl" />
         </ItemGroup>
         <Copy SourceFiles="@(XslFile)" DestinationFolder="$(ReportOutputPath)" />
         <InsertLine Path="$(MspecXmlReport)" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;Mspec_Report.xsl&quot;?&gt;" />
