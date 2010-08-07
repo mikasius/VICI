@@ -18,19 +18,19 @@
     <!-- Executable Related -->
     <PropertyGroup>
         <ZipExe>&quot;$(ToolsPath)7zip\7za.exe&quot;</ZipExe>
-        <GitExe>&quot;$(ToolsPath)Git\git.exe&quot;</GitExe>
+        <GitExe>&quot;$(ToolsPath)Git\cmd\git.cmd&quot;</GitExe>
         <FxCopExe>&quot;$(ToolsPath)FxCop\FxCopCmd.exe&quot;</FxCopExe>
         <MspecExe>&quot;$(ToolsPath)Machine.Spec\mspec.exe&quot;</MspecExe>
         <NcoverExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Console.exe&quot;</NcoverExe>
         <NCoverReportingExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe&quot;</NCoverReportingExe>
-        
+
         <FxCopReport>&quot;$(ReportOutputPath)FxCop_Analysis.html&quot;</FxCopReport>
         <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
         <CodeAnalysisDictionary>&quot;$(SourceCodePath)CodeAnalysisDictionary.xml&quot;</CodeAnalysisDictionary>
         <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
         <NCoverCoverageFile>$(ReportOutputPath)coverage.xml</NCoverCoverageFile>
         <NCoverLogFile>&quot;$(ReportOutputPath)coverage.log&quot;</NCoverLogFile>
-        <NCoverHtmlPath>$(ReportOutputPath)NCover</NCoverHtmlPath>
+        <NCoverHtmlPath>$(ReportOutputPath)NCover\</NCoverHtmlPath>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -79,6 +79,10 @@
             <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" Exclude="$(NCoverTrendFile)"/>
         </ItemGroup>
         <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
+
+        <Message Text="___Environment variables___" />
+        <Exec Command="@set" />
+
         <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Clean" />
     </Target>
     
@@ -88,7 +92,8 @@
     </Target>
     
     <Target Name="UpdateVersion">
-        <Exec Command="$(GitExe) describe --tags > $(BuildOutputPath)_version" Condition=" Exists('$(BasePath).git\') " ContinueOnError="true"/>
+        <Exec Command="$(GitExe) fetch" ContinueOnError="true" Condition=" '$(TEAMCITY_VERSION)' != '' " />
+        <Exec Command="$(GitExe) describe --tags > &quot;$(BuildOutputPath)_version&quot;" Condition=" Exists('$(BasePath).git\') " ContinueOnError="true"/>
         <ReadLinesFromFile File="$(BuildOutputPath)_version" Condition=" Exists('$(BuildOutputPath)_version') ">
             <Output TaskParameter="Lines" ItemName="VersionLines" />
         </ReadLinesFromFile>
@@ -118,6 +123,8 @@
         <CreateProperty Value="100.255.255.255" Condition=" '@(AssemblyVersion)' == '' ">
             <Output TaskParameter="Value" PropertyName="AssemblyVersion" />
         </CreateProperty>
+        <Message Text="The assembly version of this build is '$(AssemblyVersion)'" />
+        <Message Text="The version of this build is '$(Version)'" />
     </Target>
     
     <Target Name="UpdateVersionFile" DependsOnTargets="UpdateVersion">
@@ -154,7 +161,7 @@
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Contracts.Tests.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration);TrackFileAccess=false" Targets="Rebuild" />
+        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
@@ -239,12 +246,12 @@
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        
+
         <!-- Only run MSpec by itself if NCover isn't registered on this machine -->
         <Exec Command="$(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot;" Condition=" '$(NCoverKeyValue)' == '' " ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
         </Exec>
-        
+
         <!-- Run NCover (et. al.) if it is registered on this machine. -->
         <Exec Command="$(NcoverExe) $(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot; //at &quot;$(NCoverTrendFile)&quot; //l $(NCoverLogFile) //x &quot;$(NCoverCoverageFile)&quot; //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' and '$(NCoverKeyValue)' != '' " ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
