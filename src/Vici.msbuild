@@ -79,7 +79,9 @@
             <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" Exclude="$(NCoverTrendFile)"/>
         </ItemGroup>
         <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
+
         <Exec Command="set" />
+
         <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Clean" />
     </Target>
     
