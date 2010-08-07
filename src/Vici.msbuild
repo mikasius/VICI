@@ -23,14 +23,14 @@
         <MspecExe>&quot;$(ToolsPath)Machine.Spec\mspec.exe&quot;</MspecExe>
         <NcoverExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Console.exe&quot;</NcoverExe>
         <NCoverReportingExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe&quot;</NCoverReportingExe>
-        
+
         <FxCopReport>&quot;$(ReportOutputPath)FxCop_Analysis.html&quot;</FxCopReport>
         <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
         <CodeAnalysisDictionary>&quot;$(SourceCodePath)CodeAnalysisDictionary.xml&quot;</CodeAnalysisDictionary>
         <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
         <NCoverCoverageFile>$(ReportOutputPath)coverage.xml</NCoverCoverageFile>
         <NCoverLogFile>&quot;$(ReportOutputPath)coverage.log&quot;</NCoverLogFile>
-        <NCoverHtmlPath>$(ReportOutputPath)NCover</NCoverHtmlPath>
+        <NCoverHtmlPath>$(ReportOutputPath)NCover\</NCoverHtmlPath>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -79,9 +79,7 @@
             <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" Exclude="$(NCoverTrendFile)"/>
         </ItemGroup>
         <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
-        
         <Exec Command="set" />
-        
         <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Clean" />
     </Target>
     
@@ -160,7 +158,7 @@
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Contracts.Tests.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration);TrackFileAccess=false" Targets="Rebuild" />
+        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
@@ -245,12 +243,12 @@
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        
+
         <!-- Only run MSpec by itself if NCover isn't registered on this machine -->
         <Exec Command="$(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot;" Condition=" '$(NCoverKeyValue)' == '' " ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
         </Exec>
-        
+
         <!-- Run NCover (et. al.) if it is registered on this machine. -->
         <Exec Command="$(NcoverExe) $(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot; //at &quot;$(NCoverTrendFile)&quot; //l $(NCoverLogFile) //x &quot;$(NCoverCoverageFile)&quot; //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' and '$(NCoverKeyValue)' != '' " ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
