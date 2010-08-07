@@ -30,7 +30,7 @@
         <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
         <NCoverCoverageFile>$(ReportOutputPath)coverage.xml</NCoverCoverageFile>
         <NCoverLogFile>&quot;$(ReportOutputPath)coverage.log&quot;</NCoverLogFile>
-        <NCoverHtmlPath>$(ReportOutputPath)NCover\</NCoverHtmlPath>
+        <NCoverHtmlPath>$(ReportOutputPath)NCover</NCoverHtmlPath>
     </PropertyGroup>
     
     <PropertyGroup>
