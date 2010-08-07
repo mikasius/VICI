@@ -32,6 +32,7 @@ namespace Vici.Contracts.Tests.SynthesizerBaseContext
     using System.Speech.Synthesis;
     using Machine.Specifications;
 
+    [Subject("Base Abstractions")]
     public class A_SpeechSynthesizerBase_Implementation_With_No_Overrides
     {
         private static SpeechSynthesizerBase speechSynthesizer;

@@ -29,6 +29,7 @@ namespace Vici.Core.Tests.ZoneContext
     using System.IO;
     using Machine.Specifications;
 
+    [Subject(typeof(Zone))]
     public class After_Setting_The_OutputStream : New_Zone_Context
     {
         private static Stream outputStream;
