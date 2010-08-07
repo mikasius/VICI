@@ -9,6 +9,8 @@
     <OutputName>Vici.Installer</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath>$(MSBuildProjectFullPath)\..\..\..\tools\WiX\v3.5.1916.0\Wix2010.targets</WixTargetsPath>
+    <WixTasksPath>$(MSBuildProjectFullPath)\..\..\..\tools\WiX\v3.5.1916.0\WixTasks.dll</WixTasksPath>
+    <WixToolPath>$(MSBuildProjectFullPath)\..\..\..\tools\WiX\v3.5.1916.0\</WixToolPath>
     <LinkerVerboseOutput>True</LinkerVerboseOutput>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.5\Wix2010.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.5\Wix2010.targets</WixTargetsPath>

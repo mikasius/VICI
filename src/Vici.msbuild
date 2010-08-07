@@ -17,20 +17,20 @@
 
     <!-- Executable Related -->
     <PropertyGroup>
-        <ZipExe>$(ToolsPath)7zip\7za.exe</ZipExe>
-        <GitExe>$(ToolsPath)Git\git.exe</GitExe>
-        <FxCopExe>$(ToolsPath)FxCop\FxCopCmd.exe</FxCopExe>
-        <MspecExe>$(ToolsPath)Machine.Spec\mspec.exe</MspecExe>
-        <NcoverExe>$(ToolsPath)NCover\v3.4.12.6869\NCover.Console.exe</NcoverExe>
-        <NCoverReportingExe>$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe</NCoverReportingExe>
+        <ZipExe>&quot;$(ToolsPath)7zip\7za.exe&quot;</ZipExe>
+        <GitExe>&quot;$(ToolsPath)Git\cmd\git.cmd&quot;</GitExe>
+        <FxCopExe>&quot;$(ToolsPath)FxCop\FxCopCmd.exe&quot;</FxCopExe>
+        <MspecExe>&quot;$(ToolsPath)Machine.Spec\mspec.exe&quot;</MspecExe>
+        <NcoverExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Console.exe&quot;</NcoverExe>
+        <NCoverReportingExe>&quot;$(ToolsPath)NCover\v3.4.12.6869\NCover.Reporting.exe&quot;</NCoverReportingExe>
         
-        <FxCopReport>$(ReportOutputPath)FxCop_Analysis.html</FxCopReport>
+        <FxCopReport>&quot;$(ReportOutputPath)FxCop_Analysis.html&quot;</FxCopReport>
         <MspecXmlReport>$(ReportOutputPath)Mspec_Report.xml</MspecXmlReport>
-        <CodeAnalysisDictionary>$(SourceCodePath)CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
+        <CodeAnalysisDictionary>&quot;$(SourceCodePath)CodeAnalysisDictionary.xml&quot;</CodeAnalysisDictionary>
         <NCoverTrendFile>$(ReportOutputPath)coverage.trend</NCoverTrendFile>
         <NCoverCoverageFile>$(ReportOutputPath)coverage.xml</NCoverCoverageFile>
-        <NCoverLogFile>$(ReportOutputPath)coverage.log</NCoverLogFile>
-        <NCoverHtmlPath>$(ReportOutputPath)NCover\</NCoverHtmlPath>
+        <NCoverLogFile>&quot;$(ReportOutputPath)coverage.log&quot;</NCoverLogFile>
+        <NCoverHtmlPath>$(ReportOutputPath)NCover</NCoverHtmlPath>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -79,6 +79,9 @@
             <BuildArtifactsToDelete Include="$(BuildOutputPath)**\*;$(BuildOutputPath)*.*" Exclude="$(NCoverTrendFile)"/>
         </ItemGroup>
         <Delete Files="@(BuildArtifactsToDelete)" Condition=" Exists('$(BuildOutputPath)') " />
+        
+        <Exec Command="set" />
+        
         <MSBuild Targets="__removeEmptyDirectories" Projects="$(MSBuildProjectFile)" Properties="CallingTarget=Clean" />
     </Target>
     
@@ -88,6 +91,7 @@
     </Target>
     
     <Target Name="UpdateVersion">
+        <!--<Exec Command="$(GitExe) fetch" ContinueOnError="true" /> -->
         <Exec Command="$(GitExe) describe --tags > $(BuildOutputPath)_version" Condition=" Exists('$(BasePath).git\') " ContinueOnError="true"/>
         <ReadLinesFromFile File="$(BuildOutputPath)_version" Condition=" Exists('$(BuildOutputPath)_version') ">
             <Output TaskParameter="Lines" ItemName="VersionLines" />
@@ -118,6 +122,8 @@
         <CreateProperty Value="100.255.255.255" Condition=" '@(AssemblyVersion)' == '' ">
             <Output TaskParameter="Value" PropertyName="AssemblyVersion" />
         </CreateProperty>
+        <Message Text="The assembly version of this build is '$(AssemblyVersion)'" />
+        <Message Text="The version of this build is '$(Version)'" />
     </Target>
     
     <Target Name="UpdateVersionFile" DependsOnTargets="UpdateVersion">
@@ -135,7 +141,7 @@
         <WriteLinesToFile File="$(SourceCodePath)VersionInfo.cs" Lines="@(_newVersionInfoLines1)" Overwrite="true" />
     </Target>
     
-    <Target Name="Build" DependsOnTargets="Init;UpdateVersion">
+    <Target Name="Build" DependsOnTargets="Init;UpdateVersionFile">
         <Message Text="===== Building main projects =====" />
         <ItemGroup>
             <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Client.csproj" />
@@ -145,7 +151,7 @@
             <ProjectsToBuild Include="$(SourceCodePath)**\Vici.WindowsService.csproj" />
             <ProjectsToBuild Include="$(SourceCodePath)**\Vici.Weather.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(ProjectsToBuild )" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
+        <MSBuild Projects="@(ProjectsToBuild )" Properties="Configuration=$(Configuration);TrackFileAccess=false" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Tests" DependsOnTargets="Build">
@@ -154,7 +160,7 @@
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Core.Tests.csproj" />
             <TestProjectsToBuild Include="$(SourceCodePath)**\Vici.Contracts.Tests.csproj" />
         </ItemGroup>
-        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration)" Targets="Rebuild" />
+        <MSBuild Projects="@(TestProjectsToBuild)" Properties="Configuration=$(Configuration);TrackFileAccess=false" Targets="Rebuild" />
     </Target>
     
     <Target Name="Build_Installer" DependsOnTargets="Build;UpdateVersionFile">
@@ -181,7 +187,7 @@
         <WriteLinesToFile File="@(InstallerProperties)" Lines="@(_newInstallerProperties)" Overwrite="true" />
         
         <!-- Build the installer & move it to the root of the build folder -->
-        <MSBuild Projects="@(InstallerProject)" Properties="Configuration=$(Configuration);DefineSolutionProperties=false" />
+        <MSBuild Projects="@(InstallerProject)" Properties="Configuration=$(Configuration);DefineSolutionProperties=false;TrackFileAccess=false" />
         <Delete Files="$(BuildOutputPath)$(Configuration)\Vici.Installer.wixpdb" />
         <Copy SourceFiles="$(BuildOutputPath)$(Configuration)\Vici.Installer.msi" DestinationFiles="$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_Install.msi" />
         <Delete Files="$(BuildOutputPath)$(Configuration)\Vici.Installer.msi" />
@@ -198,26 +204,27 @@
     </Target>
     
     <Target Name="ArchiveSource" DependsOnTargets="UpdateVersion;Init">
-        <Exec Command="$(GitExe) archive --format=zip -9 --output=$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_src.zip master" WorkingDirectory="$(BasePath)" />
+        <Exec Command="$(GitExe) archive --format=zip -9 --output=&quot;$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_src.zip&quot; master" WorkingDirectory="$(BasePath)" Condition=" Exists('$(BasePath).git\') " />
+        <Message Text="Skipping ArchiveSource because the code does not look to be under git source control.  (.git folder doesn't exist)" Condition=" !Exists('$(BasePath).git\') " />
     </Target>
     
     <Target Name="ArchiveBinaries" DependsOnTargets="UpdateVersion;Init;Build;">
         <ItemGroup>
-            <BinariesToArchive Include="$(BuildOutputPath)$(Configuration)\**\*.*" Exclude="$(BuildOutputPath)**\*.pdb;$(BuildOutputPath)**\*.CodeAnalysisLog.xml;$(BuildOutputPath)**\*.lastcodeanalysissucceeded" />
+            <BinariesToArchive Include="$(BuildOutputPath)$(Configuration)\**\*.*" Exclude="$(BuildOutputPath)**\*.pdb;$(BuildOutputPath)**\*.CodeAnalysisLog.xml;$(BuildOutputPath)**\*.lastcodeanalysissucceeded;$(BuildOutputPath)**\*.Tests*;$(BuildOutputPath)**\*.Spec*;$(BuildOutputPath)**\Moq.*" />
         </ItemGroup>
         <!-- The @(BinariesToArchive) needs to be projected this way due to how 7za.exe handles relative paths and preserving subdirectories. -->
-        <Exec Command="$(ZipExe) a -tzip -mx9 -mmt -w$(BuildOutputPath)$(Configuration)\ $(BuildOutputPath)$(MSBuildProjectName)_$(Version)_bin.zip @(BinariesToArchive->'%(RecursiveDir)%(Filename)%(Extension)', ' ')" WorkingDirectory="$(BuildOutputPath)$(Configuration)\" />
+        <Exec Command="$(ZipExe) a -tzip -mx9 -mmt -w&quot;$(BuildOutputPath)$(Configuration)\&quot; &quot;$(BuildOutputPath)$(MSBuildProjectName)_$(Version)_bin.zip&quot; @(BinariesToArchive->'%(RecursiveDir)%(Filename)%(Extension)', ' ')" WorkingDirectory="$(BuildOutputPath)$(Configuration)\" />
     </Target>
+
     <Import Project="$(ToolsPath)StyleCop\v4.4.0.12\Microsoft.StyleCop.Targets" />
+
     <Target Name="AnalyzeAssemblies" DependsOnTargets="Init;Build;Build_Tests">
         <!-- Attempt to make the directory, just in case it doesn't exist.  Occasionally running into errors of a path not existing. -->
         <MakeDir Directories="$(ReportOutputPath)" Condition=" !Exists('$(ReportOutputPath)')" />
         <ItemGroup>
             <AssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\Vici*.dll;$(BuildOutputPath)$(Configuration)\**\Vici*.exe" Exclude="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Tests.exe;" />
         </ItemGroup>
-        <Message Text="AssembliesToAnalyze: @(AssembliesToAnalyze->'/file:%(FullPath)',' ')" />
-        <Exec Command="$(FxCopExe) @(AssembliesToAnalyze->'/file:%(FullPath)',' ') /out:$(FxCopReport) /dictionary:$(CodeAnalysisDictionary) /axsl /s /fo /searchgac /quiet" Condition=" '@(AssembliesToAnalyze)' != '' "/>
-        <Message Text="After FxCop" />
+        <Exec Command="$(FxCopExe) &quot;@(AssembliesToAnalyze->'/file:%(FullPath)','&quot; &quot;')&quot; /out:$(FxCopReport) /dictionary:$(CodeAnalysisDictionary) /axsl /s /fo /searchgac /quiet" Condition=" '@(AssembliesToAnalyze)' != '' "/>
         <StyleCopTask
             SourceFiles="@(SourceFiles)"
             ForceFullAnalysis="true"
@@ -230,15 +237,26 @@
         </ItemGroup>
         <InsertLine Path="$(ReportOutputPath)Stylecop.xml" LineNumber="0" Text="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;" />
         <InsertLine Path="$(ReportOutputPath)Stylecop.xml" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;StyleCop.xsl&quot;?&gt;" />
-        <Message Text="After StyleCop" />
         
+        <!-- Need to have the ContinueOnError because it fails if KeyName doesn't exist. -->
+        <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Gnoso\NCover" ValueName="Key" DefaultValue="" ContinueOnError="true">
+            <Output TaskParameter="Value" PropertyName="NCoverKeyValue" />
+        </RegistryRead>
         <ItemGroup>
             <TestAssembliesToAnalyze Include="$(BuildOutputPath)$(Configuration)\**\*.Tests.dll;$(BuildOutputPath)$(Configuration)\**\*.Specs.dll;" />
         </ItemGroup>
-        <Exec Command="$(NcoverExe) $(MspecExe) --xml $(MspecXmlReport) -t @(TestAssembliesToAnalyze, ' ') //at $(NCoverTrendFile) //l $(NCoverLogFile) //x $(NCoverCoverageFile) //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' " ContinueOnError="true">
+        
+        <!-- Only run MSpec by itself if NCover isn't registered on this machine -->
+        <Exec Command="$(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot;" Condition=" '$(NCoverKeyValue)' == '' " ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
         </Exec>
-        <Exec Command="$(NCoverReportingExe) $(NCoverCoverageFile) //or FullCoverageReport //op $(NCoverHtmlPath) //at $(NCoverTrendFile) //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') " />
+        
+        <!-- Run NCover (et. al.) if it is registered on this machine. -->
+        <Exec Command="$(NcoverExe) $(MspecExe) --xml &quot;$(MspecXmlReport)&quot; -t &quot;@(TestAssembliesToAnalyze, '&quot; &quot;')&quot; //at &quot;$(NCoverTrendFile)&quot; //l $(NCoverLogFile) //x &quot;$(NCoverCoverageFile)&quot; //eas &quot;CommandLine;Machine\.Specifications.*;mspec;Spark;Moq;.*\.Tests$;.*\.Specs$&quot;" Condition=" '@(TestAssembliesToAnalyze)' != '' and '$(NCoverKeyValue)' != '' " ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="NcoverExitCode" />
+        </Exec>
+        <Message Text="Generating the report from the coverage..." Condition=" '$(NCoverKeyValue)' != '' " />
+        <Exec Command="$(NCoverReportingExe) &quot;$(NCoverCoverageFile)&quot; //or FullCoverageReport //op &quot;$(NCoverHtmlPath)&quot; //at &quot;$(NCoverTrendFile)&quot; //p $(MSBuildProjectName)" Condition=" Exists('$(NCoverCoverageFile)') and '$(NCoverKeyValue)' != '' " />
         <ItemGroup>
             <XslFile Include="$(ToolsPath)Machine.Spec\Mspec_Report.xsl" />
             <XslFile Include="$(ToolsPath)StyleCop\v4.4.0.12\StyleCop.xsl" />
@@ -246,7 +264,7 @@
         <Copy SourceFiles="@(XslFile)" DestinationFolder="$(ReportOutputPath)" />
         <InsertLine Path="$(MspecXmlReport)" LineNumber="1" Text="&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;Mspec_Report.xsl&quot;?&gt;" />
         
-        <Error Code="$(NcoverExitCode)" Text="NCover has returned with an error, most likely due to failing specifications.  Please review all the report outputs." Condition=" '$(NcoverExitCode)' != '0' " />
+        <Error Code="$(NcoverExitCode)" Text="NCover has returned with an error, most likely due to failing specifications.  Please review all the report outputs." Condition=" '$(NcoverExitCode)' != '0' and '$(NcoverExitCode)' != ''" />
     </Target>
     
     <Target Name="Everything" DependsOnTargets="Build_All;AnalyzeAssemblies;ArchiveSource;ArchiveBinaries">
