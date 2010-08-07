@@ -74,6 +74,11 @@
                         padding: .2em;
                     }
                     
+                    ul.specificationList li i
+                    {
+                        padding-right: .2em;
+                    }
+                    
                     ul.specificationList li.passedStatus
                     {
                         background-color: #00FF00;
@@ -138,17 +143,13 @@
                                         <ul class="specificationList">
                                             <xsl:for-each select="specification" >
                                                 <xsl:sort select="@name" />
-                                                <xsl:choose>
-                                                    <xsl:when test="@status = 'passed'">
-                                                        <li class="passedStatus"><xsl:value-of select="@name" /></li>
-                                                    </xsl:when>
-                                                    <xsl:when test="@status = 'failed'">
-                                                        <li class="failedStatus"><xsl:value-of select="@name" /></li>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <li><xsl:value-of select="@name" /></li>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
+                                                <li>
+                                                    <xsl:attribute name="class">
+                                                        <xsl:value-of select="@status" />Status
+                                                    </xsl:attribute>
+                                                    <i>It</i>
+                                                    <xsl:value-of select="@name" />
+                                                </li>
                                             </xsl:for-each>
                                         </ul>
                                     </div>
